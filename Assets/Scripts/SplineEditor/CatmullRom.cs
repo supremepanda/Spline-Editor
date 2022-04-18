@@ -3,9 +3,10 @@ using UnityEngine;
 
 namespace SplineEditor
 {
-    public class CatmullRom
+    public class CatmullRom : MonoBehaviour
     {
 //-------Public Variables-------//
+        public const int MIN_POINTS_LENGTH = 2;
 
 
 //------Serialized Fields-------//
@@ -13,7 +14,6 @@ namespace SplineEditor
 
 //------Private Variables-------//
         private const int MIN_RESOLUTION = 2;
-        private const int MIN_POINTS_LENGTH = 2;
         private int _resolution;
         private bool _closedLoop;
         private CatmullRomPoint[] _splinePoints;
@@ -33,8 +33,8 @@ namespace SplineEditor
             var normal = CatmullRomCalculations.NormalFromTangent(tangent);
             return new CatmullRomPoint(position, tangent, normal);
         }
-        
-        public CatmullRom(Transform[] controlPoints, int resolution, bool closedLoop)
+
+        public void InitializeCatmullRom(Transform[] controlPoints, int resolution, bool closedLoop)
         {
             if(!IsGivenPointsLengthValid(controlPoints.Length) || !IsGivenResolutionValid(resolution))
                 return;
@@ -58,7 +58,7 @@ namespace SplineEditor
                 EditorDebug.LogError("Control points can not be null!");
                 return;
             }
-            if(IsGivenPointsLengthValid(controlPoints.Length))
+            if(!IsGivenPointsLengthValid(controlPoints.Length))
                 return;
             _controlPoints = new Vector3[controlPoints.Length];
             for(var i = 0; i < controlPoints.Length; i++)
@@ -133,9 +133,6 @@ namespace SplineEditor
         
         private bool IsSplinePointsInitialized()
         {
-            if(_splinePoints == null) 
-                EditorDebug.LogError("Spline not initialized!");
-            EditorDebug.Log(_splinePoints != null);
             return _splinePoints != null;
         }
         

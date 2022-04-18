@@ -24,19 +24,32 @@ namespace SplineEditor
         [SerializeField, TabGroup("Config")] private bool IsClosedLoop;
         [SerializeField, TabGroup("Config")] private Direction PointDirection = Direction.XZ;
         
-        [SerializeField, TabGroup("Draw")] private bool DrawNormals;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)), Range(0, 20)]
+        [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]
+        private bool DrawNormals;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)), Range(0, 20), OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]
         private float NormalExtrusion = 2f;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals))]
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)), OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]
         private Color NormalColor = Color.red;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)),
+         OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]
+        private float NormalThickness = 1.2f;
 
-        [SerializeField, TabGroup("Draw")] private bool DrawTangent;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)), Range(0, 20)]
+        [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateTangentDrawingConfig))] 
+        private bool DrawTangent;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)), Range(0, 20), OnValueChangedAttribute(nameof(UpdateTangentDrawingConfig))]
         private float TangentExtrusion = 2f;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent))] private Color TangentColor = Color.cyan;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)), OnValueChangedAttribute(nameof(UpdateTangentDrawingConfig))]
+        private Color TangentColor = Color.cyan;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)),
+         OnValueChangedAttribute(nameof(UpdateTangentDrawingConfig))]
+        private float TangentThickness = 1.2f;
         
-        [SerializeField, TabGroup("Draw")] private bool DrawSpline = true;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSpline))] private Color SplineColor = Color.white;
+        [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateSplineDrawingConfig))] private bool DrawSpline = true;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSpline)), OnValueChangedAttribute(nameof(UpdateSplineDrawingConfig))]
+        private Color SplineColor = Color.white;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSpline)),
+         OnValueChangedAttribute(nameof(UpdateSplineDrawingConfig))]
+        private float SplineThickness = 2.5f;
 
         [SerializeField, TabGroup("References")] private GameObject PointPrefab;
 //------Private Variables-------//
@@ -44,15 +57,17 @@ namespace SplineEditor
 
 #region UNITY_METHODS
 
-        private void Start()
+        private void OnEnable()
         {
             UpdateSpline();
+            UpdateSplineDrawingConfig();
+            UpdateNormalDrawingConfig();
+            UpdateTangentDrawingConfig();
         }
 
         private void Update()
         {
 #if UNITY_EDITOR
-            CheckDrawings();
             if (UpdateMethod != UpdateMethod.OnUpdate)
                 return;
             UpdateSpline();
@@ -104,17 +119,29 @@ namespace SplineEditor
 
 
 #region PRIVATE_METHODS
-
-        private void CheckDrawings()
+        private void UpdateSplineDrawingConfig()
         {
             if (Spline == null)
                 return;
-            if (DrawSpline) 
-                Spline.DrawSpline(SplineColor);
-            if(DrawNormals)
-                Spline.DrawNormals(NormalExtrusion, NormalColor);
-            if(DrawTangent)
-                Spline.DrawTangents(TangentExtrusion, TangentColor);
+            Spline.ActivateDrawSpline(DrawSpline);
+            Spline.SetSplineColor(SplineColor);
+            Spline.SetSplineThickness(SplineThickness);
+        }
+
+        private void UpdateNormalDrawingConfig()
+        {
+            Spline.ActivateDrawNormal(DrawNormals);
+            Spline.SetNormalColor(NormalColor);
+            Spline.SetNormalExtrusion(NormalExtrusion);
+            Spline.SetNormalThickness(NormalThickness);
+        }
+
+        private void UpdateTangentDrawingConfig()
+        {
+            Spline.ActivateDrawTangent(DrawTangent);
+            Spline.SetTangentColor(TangentColor);
+            Spline.SetTangentExtrusion(TangentExtrusion);
+            Spline.SetTangentThickness(TangentThickness);
         }
 
         private void CreateInitialPoints()

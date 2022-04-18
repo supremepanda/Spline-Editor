@@ -1,4 +1,6 @@
+using System;
 using Extensions.Other;
+using UnityEditor;
 using UnityEngine;
 
 namespace SplineEditor
@@ -18,9 +20,36 @@ namespace SplineEditor
         private bool _closedLoop;
         private CatmullRomPoint[] _splinePoints;
         private Vector3[] _controlPoints;
-
+        private bool _drawSpline = false;
+        private bool _drawNormal = false;
+        private bool _drawTangent = false;
+        private Color _splineColor;
+        private Color _normalColor;
+        private Color _tangentColor;
+        private float _normalExtrusion;
+        private float _tangentExtrusion;
+        private float _splineThickness = 2.5f;
+        private float _normalThickness = 1.2f;
+        private float _tangentThickness = 1.2f;
 #region UNITY_METHODS
 
+        private void OnDrawGizmos()
+        {
+            if (_drawSpline)
+            {
+                DrawSpline();
+            }
+
+            if (_drawNormal)
+            {
+                DrawNormals();
+            }
+
+            if (_drawTangent)
+            {
+                DrawTangents();
+            }
+        }
 
 #endregion
 
@@ -33,7 +62,61 @@ namespace SplineEditor
             var normal = CatmullRomCalculations.NormalFromTangent(tangent);
             return new CatmullRomPoint(position, tangent, normal);
         }
+        
+        public void ActivateDrawSpline(bool flag)
+        {
+            _drawSpline = flag;
+        }
 
+        public void ActivateDrawNormal(bool flag)
+        {
+            _drawNormal = flag;
+        }
+
+        public void ActivateDrawTangent(bool flag)
+        {
+            _drawTangent = flag;
+        }
+
+        public void SetSplineColor(Color color)
+        {
+            _splineColor = color;
+        }
+
+        public void SetNormalColor(Color color)
+        {
+            _normalColor = color;
+        }
+
+        public void SetTangentColor(Color color)
+        {
+            _tangentColor = color;
+        }
+
+        public void SetNormalExtrusion(float extrusion)
+        {
+            _normalExtrusion = extrusion;
+        }
+
+        public void SetTangentExtrusion(float extrusion)
+        {
+            _tangentExtrusion = extrusion;
+        }
+
+        public void SetSplineThickness(float thickness)
+        {
+            _splineThickness = thickness;
+        }
+
+        public void SetNormalThickness(float thickness)
+        {
+            _normalThickness = thickness;
+        }
+
+        public void SetTangentThickness(float thickness)
+        {
+            _tangentThickness = thickness;
+        }
         public void InitializeCatmullRom(Transform[] controlPoints, int resolution, bool closedLoop)
         {
             if(!IsGivenPointsLengthValid(controlPoints.Length) || !IsGivenResolutionValid(resolution))
@@ -79,37 +162,8 @@ namespace SplineEditor
             _closedLoop = closedLoop;
             GenerateSplinePoints();
         }
-        
-        public void DrawSpline(Color color)
-        {
-            if (!IsSplinePointsInitialized())
-                return;
-            for(var i = 0; i < _splinePoints.Length; i++)
-            {
-                if (i == _splinePoints.Length - 1 && _closedLoop)
-                    Debug.DrawLine(_splinePoints[i].Position, _splinePoints[0].Position, color);
-                else if(i < _splinePoints.Length - 1)
-                    Debug.DrawLine(_splinePoints[i].Position, _splinePoints[i + 1].Position, color);
-            }
-        }
-        
-        public void DrawNormals(float extrusion, Color color)
-        {
-            if (!IsSplinePointsInitialized())
-                return;
-            for(var i = 0; i < _splinePoints.Length; i++)
-                Debug.DrawLine(_splinePoints[i].Position,
-                    _splinePoints[i].Position + _splinePoints[i].Normal * extrusion, color);
-        }
 
-        public void DrawTangents(float extrusion, Color color)
-        {
-            if (!IsSplinePointsInitialized())
-                return;
-            for(var i = 0; i < _splinePoints.Length; i++)
-                Debug.DrawLine(_splinePoints[i].Position,
-                    _splinePoints[i].Position + _splinePoints[i].Tangent * extrusion, color);
-        }
+        
 #endregion
 
 
@@ -129,6 +183,40 @@ namespace SplineEditor
                 return true;
             EditorDebug.LogError($"Too few control points (min: {MIN_POINTS_LENGTH})");
             return false;
+        }
+        
+        private void DrawSpline()
+        {
+            if (!IsSplinePointsInitialized())
+                return;
+            Handles.color = _splineColor;
+            for(var i = 0; i < _splinePoints.Length; i++)
+            {
+                if (i == _splinePoints.Length - 1 && _closedLoop)
+                    Handles.DrawLine(_splinePoints[i].Position, _splinePoints[0].Position, _splineThickness);
+                else if(i < _splinePoints.Length - 1)
+                    Handles.DrawLine(_splinePoints[i].Position, _splinePoints[i + 1].Position, _splineThickness);
+            }
+        }
+        
+        private void DrawNormals()
+        {
+            if (!IsSplinePointsInitialized())
+                return;
+            Handles.color = _normalColor;
+            for(var i = 0; i < _splinePoints.Length; i++)
+                Handles.DrawLine(_splinePoints[i].Position,
+                    _splinePoints[i].Position + _splinePoints[i].Normal * _normalExtrusion, _normalThickness);
+        }
+
+        private void DrawTangents()
+        {
+            if (!IsSplinePointsInitialized())
+                return;
+            Handles.color = _tangentColor;
+            for(var i = 0; i < _splinePoints.Length; i++)
+                Handles.DrawLine(_splinePoints[i].Position,
+                    _splinePoints[i].Position + _splinePoints[i].Tangent * _tangentExtrusion, _tangentThickness);
         }
         
         private bool IsSplinePointsInitialized()

@@ -59,6 +59,8 @@ namespace SplineEditor
 
         private void OnEnable()
         {
+            if (Spline == null)
+                return;
             UpdateSpline();
             UpdateSplineDrawingConfig();
             UpdateNormalDrawingConfig();
@@ -68,6 +70,8 @@ namespace SplineEditor
         private void Update()
         {
 #if UNITY_EDITOR
+            if (Spline == null)
+                return;
             if (UpdateMethod != UpdateMethod.OnUpdate)
                 return;
             UpdateSpline();
@@ -82,7 +86,7 @@ namespace SplineEditor
         [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f), TabGroup("Config")]
         public void AddPoint()
         {
-            CreatePoint();
+            CreateNewPoint();
         }
         
         [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f), TabGroup("Init")]
@@ -107,6 +111,22 @@ namespace SplineEditor
 #endif
         }
 
+        public void RemovePoint(Transform point, bool destroyEnabled)
+        {
+#if UNITY_EDITOR
+            if (point == null)
+                return;
+            if (Spline == null)
+                return;
+            ControlPoints.Remove(point);
+            UpdateSpline();
+            if (!destroyEnabled)
+                return;
+            DestroyImmediate(point.gameObject);
+#endif
+
+        }
+
         [Button(ButtonSizes.Large), ShowIf("UpdateMethod", UpdateMethod.WithMethod)]
         public void UpdateSpline()
         {
@@ -121,8 +141,6 @@ namespace SplineEditor
 #region PRIVATE_METHODS
         private void UpdateSplineDrawingConfig()
         {
-            if (Spline == null)
-                return;
             Spline.ActivateDrawSpline(DrawSpline);
             Spline.SetSplineColor(SplineColor);
             Spline.SetSplineThickness(SplineThickness);
@@ -150,8 +168,7 @@ namespace SplineEditor
             ControlPoints = new List<Transform>();
             for (var ind = 0; ind < CatmullRom.MIN_POINTS_LENGTH; ind++)
             {
-                var point = PrefabUtility.InstantiatePrefab(PointPrefab, transform) as GameObject;
-                point.name = $"Point_{ind}";
+                var point = CreatePoint();
                 var target = ind * DISTANCE_BETWEEN_TWO_POINTS;
                 var localPosition = point.transform.localPosition;
                 localPosition = PointDirection switch
@@ -162,18 +179,16 @@ namespace SplineEditor
                 };
                 point.transform.localPosition = localPosition;
                 ControlPoints.Add(point.transform);
+                SetPoint(point);
             }
 #endif
             
         }
 
-        private void CreatePoint()
+        private void CreateNewPoint()
         {
 #if UNITY_EDITOR
-            var point = PrefabUtility.InstantiatePrefab(PointPrefab, transform) as GameObject;
-            if (point == null)
-                return;
-            point.name = $"Point_{ControlPoints.Count}";
+            var point = CreatePoint();
             var lastPointPos = ControlPoints.Last().localPosition;
             var targetPos = PointDirection switch
             {
@@ -183,7 +198,27 @@ namespace SplineEditor
             };
             point.transform.localPosition = targetPos;
             ControlPoints.Add(point.transform);
+            SetPoint(point);
 #endif
+        }
+
+        private GameObject CreatePoint()
+        {
+#if UNITY_EDITOR
+            var point = PrefabUtility.InstantiatePrefab(PointPrefab, transform) as GameObject;
+            point.name = $"Point_{ControlPoints.Count}";
+            return point; 
+#else
+            return null;
+#endif
+        }
+
+        private void SetPoint(GameObject point)
+        {
+            point.TryGetComponent(out Point pointComponent);
+            if (pointComponent == null)
+                return;
+            pointComponent.SetSplineCreator(this);
         }
 #endregion
 

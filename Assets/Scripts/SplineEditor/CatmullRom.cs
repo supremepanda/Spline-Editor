@@ -23,14 +23,17 @@ namespace SplineEditor
         private bool _drawSpline = false;
         private bool _drawNormal = false;
         private bool _drawTangent = false;
+        private bool _drawSphere = false;
         private Color _splineColor;
         private Color _normalColor;
         private Color _tangentColor;
+        private Color _sphereColor;
         private float _normalExtrusion;
         private float _tangentExtrusion;
         private float _splineThickness = 2.5f;
         private float _normalThickness = 1.2f;
         private float _tangentThickness = 1.2f;
+        private float _sphereRadius = 1f;
 #region UNITY_METHODS
 
         private void OnDrawGizmos()
@@ -48,6 +51,11 @@ namespace SplineEditor
             if (_drawTangent)
             {
                 DrawTangents();
+            }
+
+            if (_drawSphere)
+            {
+                DrawSphere();
             }
         }
 
@@ -78,6 +86,16 @@ namespace SplineEditor
             _drawTangent = flag;
         }
 
+        public void ActivateDrawSphere(bool flag)
+        {
+            _drawSphere = flag;
+        }
+
+        public void SetSphereColor(Color color)
+        {
+            _sphereColor = color;
+        }
+        
         public void SetSplineColor(Color color)
         {
             _splineColor = color;
@@ -116,6 +134,11 @@ namespace SplineEditor
         public void SetTangentThickness(float thickness)
         {
             _tangentThickness = thickness;
+        }
+
+        public void SetSphereRadius(float radius)
+        {
+            _sphereRadius = radius;
         }
         public void InitializeCatmullRom(Transform[] controlPoints, int resolution, bool closedLoop)
         {
@@ -217,6 +240,17 @@ namespace SplineEditor
             for(var i = 0; i < _splinePoints.Length; i++)
                 Handles.DrawLine(_splinePoints[i].Position,
                     _splinePoints[i].Position + _splinePoints[i].Tangent * _tangentExtrusion, _tangentThickness);
+        }
+
+        private void DrawSphere()
+        {
+            if (!IsSplinePointsInitialized())
+                return;
+            Gizmos.color = _sphereColor;
+            for (var ind = 0; ind < _controlPoints.Length; ind++)
+            {
+                Gizmos.DrawSphere(_controlPoints[ind], _sphereRadius);
+            }
         }
         
         private bool IsSplinePointsInitialized()

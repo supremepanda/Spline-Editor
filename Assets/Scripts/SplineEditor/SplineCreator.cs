@@ -51,6 +51,12 @@ namespace SplineEditor
          OnValueChangedAttribute(nameof(UpdateSplineDrawingConfig))]
         private float SplineThickness = 2.5f;
 
+        [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateSphereDrawingConfig))] private bool DrawSphere = true;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSphere)), OnValueChangedAttribute(nameof(UpdateSphereDrawingConfig))]
+        private Color SphereColor = Color.magenta;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSphere)), OnValueChangedAttribute(nameof(UpdateSphereDrawingConfig))]
+        private float SphereRadius = 1f;
+        
         [SerializeField, TabGroup("References")] private GameObject PointPrefab;
 //------Private Variables-------//
         private const float DISTANCE_BETWEEN_TWO_POINTS = 2f;
@@ -160,6 +166,13 @@ namespace SplineEditor
             Spline.SetTangentColor(TangentColor);
             Spline.SetTangentExtrusion(TangentExtrusion);
             Spline.SetTangentThickness(TangentThickness);
+        }
+
+        private void UpdateSphereDrawingConfig()
+        {
+            Spline.ActivateDrawSphere(DrawSphere);
+            Spline.SetSphereRadius(SphereRadius);
+            Spline.SetSphereColor(SphereColor);
         }
 
         private void CreateInitialPoints()

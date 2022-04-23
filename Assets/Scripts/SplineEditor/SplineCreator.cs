@@ -60,7 +60,7 @@ namespace SplineEditor
         [SerializeField, TabGroup("References")] private GameObject PointPrefab;
 //------Private Variables-------//
         private const float DISTANCE_BETWEEN_TWO_POINTS = 2f;
-
+        private const string POINT_NAME_PREFIX = "Point_";
 #region UNITY_METHODS
 
         private void OnEnable()
@@ -89,7 +89,7 @@ namespace SplineEditor
 
 #region PUBLIC_METHODS
 
-        [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f), TabGroup("Config")]
+        [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f)]
         public void AddPoint()
         {
             CreateNewPoint();
@@ -126,6 +126,7 @@ namespace SplineEditor
                 return;
             ControlPoints.Remove(point);
             UpdateSpline();
+            UpdatePointNames();
             if (!destroyEnabled)
                 return;
             DestroyImmediate(point.gameObject);
@@ -219,11 +220,19 @@ namespace SplineEditor
         {
 #if UNITY_EDITOR
             var point = PrefabUtility.InstantiatePrefab(PointPrefab, transform) as GameObject;
-            point.name = $"Point_{ControlPoints.Count}";
+            point.name = $"{POINT_NAME_PREFIX}{ControlPoints.Count}";
             return point; 
 #else
             return null;
 #endif
+        }
+
+        private void UpdatePointNames()
+        {
+            for (var ind = 0; ind < ControlPoints.Count; ind++)
+            {
+                ControlPoints[ind].gameObject.name = $"{POINT_NAME_PREFIX}{ind}";
+            }
         }
 
         private void SetPoint(GameObject point)

@@ -1,3 +1,5 @@
+using System;
+using Extensions.Other;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,7 +12,7 @@ namespace SplineEditor
 
 
 //------Serialized Fields-------//
-        
+        [SerializeField] private GameObject Renderer;
 
 //------Private Variables-------//
         private SplineController _splineController;
@@ -18,9 +20,18 @@ namespace SplineEditor
         private Transform _transform;
 #region UNITY_METHODS
 
+        private void Start()
+        {
+            if (!Application.isPlaying)
+                return;
+            Destroy(Renderer);
+        }
+
         private void OnEnable()
         {
             _transform = transform;
+            if (transform.parent == null)
+                return;
             transform.parent.TryGetComponent(out SplineController creator);
             _splineController = creator;
         }
@@ -51,6 +62,8 @@ namespace SplineEditor
 
         private void RemovePointWithoutDestroyEnabled()
         {
+            if (_splineController == null)
+                return;
             _isDestroyed = true;
             _splineController.RemovePoint(_transform, false);
         }

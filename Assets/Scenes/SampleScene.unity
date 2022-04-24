@@ -201,7 +201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -371,7 +371,7 @@ PrefabInstance:
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1
+      value: -4.23
       objectReference: {fileID: 0}
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
@@ -381,7 +381,7 @@ PrefabInstance:
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 12
+      value: 9.52
       objectReference: {fileID: 0}
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
@@ -782,7 +782,7 @@ PrefabInstance:
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -5.35
       objectReference: {fileID: 0}
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
@@ -958,11 +958,11 @@ MonoBehaviour:
   Resolution: 25
   IsClosedLoop: 0
   PointDirection: 1
-  DrawNormals: 1
+  DrawNormals: 0
   NormalExtrusion: 2
   NormalColor: {r: 1, g: 0, b: 0, a: 1}
   NormalThickness: 1.2
-  DrawTangent: 1
+  DrawTangent: 0
   TangentExtrusion: 1.37
   TangentColor: {r: 0, g: 1, b: 1, a: 1}
   TangentThickness: 1.2
@@ -1031,7 +1031,7 @@ PrefabInstance:
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4
+      value: 5.027
       objectReference: {fileID: 0}
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}

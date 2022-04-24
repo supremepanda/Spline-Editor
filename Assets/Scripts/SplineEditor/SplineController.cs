@@ -74,6 +74,7 @@ namespace SplineEditor
             UpdateSplineDrawingConfig();
             UpdateNormalDrawingConfig();
             UpdateTangentDrawingConfig();
+            UpdateSphereDrawingConfig();
 #endif
         }
 
@@ -92,6 +93,7 @@ namespace SplineEditor
             UpdateSplineDrawingConfig();
             UpdateNormalDrawingConfig();
             UpdateTangentDrawingConfig();
+            UpdateSphereDrawingConfig();
 #endif
         }
 

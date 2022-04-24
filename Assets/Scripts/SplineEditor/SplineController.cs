@@ -20,8 +20,8 @@ namespace SplineEditor
         [SerializeField, ReadOnly] private List<Transform> ControlPoints;
         
         [SerializeField, TabGroup("Config")] private UpdateMethod UpdateMethod;
-        [SerializeField, Range(2, 25), TabGroup("Config")] private int Resolution;
-        [SerializeField, TabGroup("Config")] private bool IsClosedLoop;
+        [SerializeField, Range(2, 25), TabGroup("Config"), OnValueChanged(nameof(UpdateSpline))] private int Resolution;
+        [SerializeField, TabGroup("Config"), OnValueChanged(nameof(UpdateSpline))] private bool IsClosedLoop;
         [SerializeField, TabGroup("Config")] private Direction PointDirection = Direction.XZ;
         
         [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]

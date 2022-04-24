@@ -371,7 +371,7 @@ PrefabInstance:
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.23
+      value: -4.03
       objectReference: {fileID: 0}
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
@@ -464,7 +464,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsEnabled: 0
-  Speed: 0
+  Speed: 0.3
+  MovementMode: 1
   NormalizedPosition: 0
   Spline: {fileID: 1664851705}
 --- !u!65 &614668025
@@ -956,13 +957,13 @@ MonoBehaviour:
   - {fileID: 719571534}
   UpdateMethod: 0
   Resolution: 25
-  IsClosedLoop: 0
+  IsClosedLoop: 1
   PointDirection: 1
   DrawNormals: 0
   NormalExtrusion: 2
   NormalColor: {r: 1, g: 0, b: 0, a: 1}
   NormalThickness: 1.2
-  DrawTangent: 0
+  DrawTangent: 1
   TangentExtrusion: 1.37
   TangentColor: {r: 0, g: 1, b: 1, a: 1}
   TangentThickness: 1.2
@@ -1021,7 +1022,7 @@ PrefabInstance:
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1.08
       objectReference: {fileID: 0}
     - target: {fileID: 8787753664841808969, guid: 3d1061a907e004edbaa64420490ede1c,
         type: 3}

@@ -95,15 +95,18 @@ namespace SplineEditor
         
         public void UpdateResolution(int resolution, bool closedLoop)
         {
+            UpdateClosedLoop(closedLoop, false);
             if(!IsGivenResolutionValid(resolution))
                 return;
             _resolution = resolution;
             GenerateSplinePoints();
         }
         
-        public void UpdateClosedLoop(bool closedLoop)
+        public void UpdateClosedLoop(bool closedLoop, bool generatePoints)
         {
             _closedLoop = closedLoop;
+            if (!generatePoints)
+                return;
             GenerateSplinePoints();
         }
 
@@ -163,7 +166,12 @@ namespace SplineEditor
                 if (currentPointInd == _controlPoints.Length - 1)
                     return _controlPoints[(currentPointInd + 2) % _controlPoints.Length] - startPoint;
                 if (currentPointInd == 0)
+                {
+                    // ReSharper disable once UselessBinaryOperation
+                    if (currentPointInd + 2 >= _controlPoints.Length)
+                        return Vector3.zero;
                     return _controlPoints[currentPointInd + 2] - startPoint;
+                }
                 return _controlPoints[(currentPointInd + 2) % _controlPoints.Length] - startPoint;
             }
             if (currentPointInd < _controlPoints.Length - 2)

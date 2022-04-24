@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Extensions.Other;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace SplineEditor
     {
 //-------Public Variables-------//
         public const int MIN_POINTS_LENGTH = 2;
-
+        public CatmullRomPoint[] SplinePoints => _splinePoints;
 
 //------Serialized Fields-------//
 
@@ -20,7 +21,7 @@ namespace SplineEditor
         private bool _closedLoop;
         private CatmullRomPoint[] _splinePoints;
         private Vector3[] _controlPoints;
-        
+        private float _totalLength;
 #region UNITY_METHODS
 
         
@@ -34,9 +35,31 @@ namespace SplineEditor
             var position = CatmullRomCalculations.CalculatePosition(start, end, tanPoint0, tanPoint1, t);
             var tangent = CatmullRomCalculations.CalculateTangent(start, end, tanPoint0, tanPoint1, t);            
             var normal = CatmullRomCalculations.NormalFromTangent(tangent);
-            return new CatmullRomPoint(position, tangent, normal);
+            return new CatmullRomPoint(position, tangent, normal, 0f, 0f);
         }
-        
+
+        public (Vector3, Vector3) GetPositionAndTangentFromNormalizedValue(float value)
+        {
+            var point1 = new CatmullRomPoint();
+            var point2 = new CatmullRomPoint();
+            for (var ind = 0; ind < _splinePoints.Length; ind++)
+            {
+                if (value < _splinePoints[ind].NormalizedValue)
+                {
+                    point1 = _splinePoints[ind - 1];
+                    point2 = _splinePoints[ind];
+                    break;
+                }
+                if (value == _splinePoints[ind].NormalizedValue)
+                {
+                    return (_splinePoints[ind].Position, _splinePoints[ind].Tangent);
+                }
+            }
+            var t = Mathf.InverseLerp(point1.NormalizedValue, point2.NormalizedValue, value);
+            var targetPos = Vector3.Lerp(point1.Position, point2.Position, t);
+            var tangent = Vector3.Lerp(point1.Tangent, point2.Tangent, t);
+            return (targetPos, tangent);
+        }
         
         public void InitializeCatmullRom(Transform[] controlPoints, int resolution, bool closedLoop)
         {
@@ -158,6 +181,37 @@ namespace SplineEditor
                 _splinePoints[currentPointInd * _resolution + tesselatedPoint] = point;
             }
         }
+
+        private void CalculateTotalLength()
+        {
+            var length = 0f;
+            for (var ind = 0; ind < _splinePoints.Length; ind++)
+            {
+                if (ind == 0)
+                    continue;
+                length += Vector3.Distance(_splinePoints[ind].Position, _splinePoints[ind - 1].Position);
+            }
+
+            _totalLength = length;
+        }
+
+        private void CalculateNormalizedValuesOfPoints()
+        {
+            for (var ind = 0; ind < _splinePoints.Length; ind++)
+            {
+                if (ind == 0)
+                {
+                    _splinePoints[ind].NormalizedValue = 0f;
+                    _splinePoints[ind].DistanceToStart = 0f;
+                    continue;
+                }
+                var distance = Vector3.Distance(_splinePoints[ind].Position, _splinePoints[ind - 1].Position)
+                               + _splinePoints[ind - 1].DistanceToStart;
+                var normalizedValue = distance / _totalLength;
+                _splinePoints[ind].NormalizedValue = normalizedValue;
+                _splinePoints[ind].DistanceToStart = distance;
+            }
+        }
 #endregion
         private void GenerateSplinePoints()
         {
@@ -179,6 +233,8 @@ namespace SplineEditor
                     pointStep = 1.0f / (_resolution - 1);
                 CreateTesselationPoints(currentPoint, pointStep, startPoint, endPoint, tangent0, tangent1);
             }
+            CalculateTotalLength();
+            CalculateNormalizedValuesOfPoints();
         }
     }
 }

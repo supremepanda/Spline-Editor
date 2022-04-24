@@ -10,7 +10,7 @@ namespace SplineEditor
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(CatmullRom))]
-    public class SplineCreator : MonoBehaviour
+    public class SplineController : MonoBehaviour
     {
 //-------Public Variables-------//
         public CatmullRom GetSpline => Spline;
@@ -162,6 +162,7 @@ namespace SplineEditor
             Spline.UpdateControlPoints(ControlPoints.ToArray());
             Spline.UpdateResolution(Resolution, IsClosedLoop);
         }
+
 #endregion
 
 

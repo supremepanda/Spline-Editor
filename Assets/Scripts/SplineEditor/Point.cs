@@ -13,7 +13,7 @@ namespace SplineEditor
         
 
 //------Private Variables-------//
-        private SplineCreator _splineCreator;
+        private SplineController _splineController;
         private bool _isDestroyed = false;
         private Transform _transform;
 #region UNITY_METHODS
@@ -21,8 +21,8 @@ namespace SplineEditor
         private void OnEnable()
         {
             _transform = transform;
-            transform.parent.TryGetComponent(out SplineCreator creator);
-            _splineCreator = creator;
+            transform.parent.TryGetComponent(out SplineController creator);
+            _splineController = creator;
         }
 
         private void OnDestroy()
@@ -46,13 +46,13 @@ namespace SplineEditor
         private void RemovePoint()
         {
             _isDestroyed = true;
-            _splineCreator.RemovePoint(_transform, true);
+            _splineController.RemovePoint(_transform, true);
         }
 
         private void RemovePointWithoutDestroyEnabled()
         {
             _isDestroyed = true;
-            _splineCreator.RemovePoint(_transform, false);
+            _splineController.RemovePoint(_transform, false);
         }
 #endregion
 

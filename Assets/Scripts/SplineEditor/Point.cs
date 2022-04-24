@@ -21,6 +21,8 @@ namespace SplineEditor
         private void OnEnable()
         {
             _transform = transform;
+            transform.parent.TryGetComponent(out SplineCreator creator);
+            _splineCreator = creator;
         }
 
         private void OnDestroy()
@@ -35,10 +37,6 @@ namespace SplineEditor
 
 #region PUBLIC_METHODS
 
-        public void SetSplineCreator(SplineCreator creator)
-        {
-            _splineCreator = creator;
-        }
 #endregion
 
 

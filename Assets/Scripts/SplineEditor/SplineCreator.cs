@@ -67,21 +67,41 @@ namespace SplineEditor
         {
             if (Spline == null)
                 return;
+            if (Application.isPlaying)
+                return;
             UpdateSpline();
+#if UNITY_EDITOR
             UpdateSplineDrawingConfig();
             UpdateNormalDrawingConfig();
             UpdateTangentDrawingConfig();
+#endif
+        }
+
+        private void Awake()
+        {
+            if (Spline == null)
+                return;
+            if (UpdateMethod != UpdateMethod.WithMethod)
+                return;
+            UpdateSpline();
+        }
+
+        private void Start()
+        {
+#if UNITY_EDITOR
+            UpdateSplineDrawingConfig();
+            UpdateNormalDrawingConfig();
+            UpdateTangentDrawingConfig();
+#endif
         }
 
         private void Update()
         {
-#if UNITY_EDITOR
             if (Spline == null)
                 return;
             if (UpdateMethod != UpdateMethod.OnUpdate)
                 return;
             UpdateSpline();
-#endif
         }
 
 #endregion
@@ -193,7 +213,6 @@ namespace SplineEditor
                 };
                 point.transform.localPosition = localPosition;
                 ControlPoints.Add(point.transform);
-                SetPoint(point);
             }
 #endif
             
@@ -212,7 +231,6 @@ namespace SplineEditor
             };
             point.transform.localPosition = targetPos;
             ControlPoints.Add(point.transform);
-            SetPoint(point);
 #endif
         }
 
@@ -233,14 +251,6 @@ namespace SplineEditor
             {
                 ControlPoints[ind].gameObject.name = $"{POINT_NAME_PREFIX}{ind}";
             }
-        }
-
-        private void SetPoint(GameObject point)
-        {
-            point.TryGetComponent(out Point pointComponent);
-            if (pointComponent == null)
-                return;
-            pointComponent.SetSplineCreator(this);
         }
 #endregion
 

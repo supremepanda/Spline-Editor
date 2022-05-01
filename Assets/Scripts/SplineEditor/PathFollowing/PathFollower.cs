@@ -30,6 +30,21 @@ namespace SplineEditor.PathFollowing
         {
             if (!IsEnabled)
                 return;
+            CheckActionsForPositionerMode();
+        }
+
+#endregion
+
+
+#region PUBLIC_METHODS
+
+#endregion
+
+
+#region PRIVATE_METHODS
+
+        private void CheckActionsForPositionerMode()
+        {
             if (PositionerMode == PositionerMode.Normalized)
             {
                 CheckNormalizedPosition();
@@ -43,17 +58,6 @@ namespace SplineEditor.PathFollowing
                 UpdatePositionWithDistance();
             }
         }
-
-#endregion
-
-
-#region PUBLIC_METHODS
-
-#endregion
-
-
-#region PRIVATE_METHODS
-
 #region Normalized Value Functions
 
         [Button(ButtonSizes.Large), TabGroup("Debug")]

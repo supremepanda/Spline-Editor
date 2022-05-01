@@ -55,7 +55,7 @@ namespace SplineEditor
         [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSphere)), OnValueChangedAttribute(nameof(UpdateSphereDrawingConfig))]
         private Color SphereColor = Color.magenta;
         [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSphere)), OnValueChangedAttribute(nameof(UpdateSphereDrawingConfig))]
-        private float SphereRadius = 1f;
+        private float SphereRadius = .22f;
         
         [SerializeField, TabGroup("References")] private GameObject PointPrefab;
 //------Private Variables-------//

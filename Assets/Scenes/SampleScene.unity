@@ -465,9 +465,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsEnabled: 0
   Speed: 0.3
-  MovementMode: 1
   NormalizedPosition: 0
+  Distance: 0
   Spline: {fileID: 1664851705}
+  PositionerMode: 0
+  MovementMode: 2
+  EstimatedFinishTime: 3.3333333
 --- !u!65 &614668025
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -538,7 +541,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 614668023}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.9676738, z: 0, w: -0.25220534}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -963,7 +966,7 @@ MonoBehaviour:
   NormalExtrusion: 2
   NormalColor: {r: 1, g: 0, b: 0, a: 1}
   NormalThickness: 1.2
-  DrawTangent: 1
+  DrawTangent: 0
   TangentExtrusion: 1.37
   TangentColor: {r: 0, g: 1, b: 1, a: 1}
   TangentThickness: 1.2
@@ -972,7 +975,7 @@ MonoBehaviour:
   SplineThickness: 2.5
   DrawSphere: 1
   SphereColor: {r: 1, g: 0, b: 1, a: 1}
-  SphereRadius: 0.05
+  SphereRadius: 0.22
   PointPrefab: {fileID: 8982422967065712982, guid: 3d1061a907e004edbaa64420490ede1c,
     type: 3}
 --- !u!4 &1664851704

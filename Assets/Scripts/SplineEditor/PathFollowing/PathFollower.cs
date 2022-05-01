@@ -9,28 +9,38 @@ namespace SplineEditor.PathFollowing
 //-------Public Variables-------//
         public bool IsEnabled = false;
         public float Speed;
-        public MovementMode MovementMode;
-        [Range(0f, 1f), OnValueChanged(nameof(UpdatePosition))] public float NormalizedPosition;
+        [Range(0f, 1f), OnValueChanged(nameof(UpdatePositionWithNormalizedValue)),
+         ShowIf(nameof(PositionerMode), PositionerMode.Normalized)]
+        public float NormalizedPosition;
+        [MinValue(0f), OnValueChanged(nameof(UpdatePositionWithDistance)),
+         ShowIf(nameof(PositionerMode), PositionerMode.Distance)]
+        public float Distance;
 //------Serialized Fields-------//
         [SerializeField, Required, PropertyOrder(-1)] private CatmullRom Spline;
+        [SerializeField] private PositionerMode PositionerMode;
+        [SerializeField] private MovementMode MovementMode;
 //------Private Variables-------//
         private Action _reachedZero;
         private Action _reachedOne;
         private short _incrementMode = 1;
+//------Debug------//
+        [SerializeField, ReadOnly, TabGroup("Debug")] private float EstimatedFinishTime;
 #region UNITY_METHODS
-
-        private void Awake()
-        {
-            
-        }
-
         private void Update()
         {
             if (!IsEnabled)
                 return;
             CheckNormalizedPosition();
-            NormalizedPosition = Mathf.Clamp01(NormalizedPosition + Speed * _incrementMode * Time.deltaTime);
-            UpdatePosition();
+            if (PositionerMode == PositionerMode.Normalized)
+            {
+                NormalizedPosition = Mathf.Clamp01(NormalizedPosition + Speed * _incrementMode * Time.deltaTime);
+                UpdatePositionWithNormalizedValue();
+            }
+            else if (PositionerMode == PositionerMode.Distance)
+            {
+                Distance = Mathf.Clamp(Distance + Speed * _incrementMode * Time.deltaTime, 0f, Spline.TotalLength);
+                UpdatePositionWithDistance();
+            }
         }
 
 #endregion
@@ -43,7 +53,18 @@ namespace SplineEditor.PathFollowing
 
 #region PRIVATE_METHODS
 
-        private void UpdatePosition()
+#region Normalized Value Functions
+
+        [Button(ButtonSizes.Large), TabGroup("Debug")]
+        private void CalculateEstimatedFinishTime()
+        {
+            if(PositionerMode == PositionerMode.Distance)
+                EstimatedFinishTime = Spline.TotalLength / Speed;
+            else if (PositionerMode == PositionerMode.Normalized)
+                EstimatedFinishTime = 1f / Speed;
+        }
+        
+        private void UpdatePositionWithNormalizedValue()
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition);
             transform.position = targetPos;
@@ -52,6 +73,7 @@ namespace SplineEditor.PathFollowing
 
         private short SetIncrementModeAtTheEnd()
         {
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (MovementMode == MovementMode.PingPong)
                 return -1;
             if (MovementMode == MovementMode.Default) IsEnabled = false;
@@ -59,17 +81,32 @@ namespace SplineEditor.PathFollowing
             return 1;
         }
 
-        private short SetIncrementModeAtTheStart()
+        private static short SetIncrementModeAtTheStart()
         {
             return 1;
         }
 
         private void CheckNormalizedPosition()
         {
-            if (NormalizedPosition == 0f)
-                _incrementMode = SetIncrementModeAtTheStart();
-            else if (NormalizedPosition == 1f) _incrementMode = SetIncrementModeAtTheEnd();
+            _incrementMode = NormalizedPosition switch
+            {
+                0f => SetIncrementModeAtTheStart(),
+                1f => SetIncrementModeAtTheEnd(),
+                _ => _incrementMode
+            };
         }
+
+#endregion
+        
+
+        #region Distance Functions
+        private void UpdatePositionWithDistance()
+        {
+            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance);
+            transform.position = targetPos;
+            transform.rotation = Quaternion.LookRotation(tangent);
+        }
+        #endregion
 #endregion
 
     }

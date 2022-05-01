@@ -14,7 +14,8 @@ namespace SplineEditor.PathFollowing.Positioner
         public float Distance;
 //------Serialized Fields-------//
         [SerializeField, Required, PropertyOrder(-1)] protected CatmullRom Spline;
-        [SerializeField] protected PositionerMode PositionerMode;
+        [SerializeField, OnValueChanged(nameof(UpdateOnPositionerModeChanged))] 
+        protected PositionerMode PositionerMode;
 //------Private Variables-------//
         protected short IncrementMode = 1;
 
@@ -32,6 +33,15 @@ namespace SplineEditor.PathFollowing.Positioner
 
         
 #region Normalized Value Functions
+
+        private void UpdateOnPositionerModeChanged()
+        {
+            if (PositionerMode == PositionerMode.Distance)
+                UpdatePositionWithDistance();
+            else if (PositionerMode == PositionerMode.Normalized)
+                UpdatePositionWithNormalizedValue();
+        }
+        
         protected void UpdatePositionWithNormalizedValue()
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition);

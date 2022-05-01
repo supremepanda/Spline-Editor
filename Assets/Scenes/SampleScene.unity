@@ -538,8 +538,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7b855c59094bc4a84a1a38c1c3dd6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NormalizedPosition: 0.258
-  Distance: 14.3
+  NormalizedPosition: 0.558
+  Distance: 14.63
   Spline: {fileID: 1664851705}
   PositionerMode: 1
 --- !u!135 &563120898
@@ -612,8 +612,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 563120896}
-  m_LocalRotation: {x: 0, y: -0.3508602, z: -0, w: 0.9364279}
-  m_LocalPosition: {x: -2.0497928, y: 0, z: 6.920975}
+  m_LocalRotation: {x: 0, y: -0.3576181, z: -0, w: 0.93386793}
+  m_LocalPosition: {x: -2.2688067, y: 0, z: 7.1678157}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

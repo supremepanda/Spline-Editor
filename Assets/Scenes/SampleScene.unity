@@ -464,12 +464,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsEnabled: 0
-  Speed: 0.3
+  Speed: 10
   NormalizedPosition: 0
   Distance: 0
   Spline: {fileID: 1664851705}
-  PositionerMode: 0
-  MovementMode: 2
+  PositionerMode: 1
+  MovementMode: 1
   EstimatedFinishTime: 3.3333333
 --- !u!65 &614668025
 BoxCollider:

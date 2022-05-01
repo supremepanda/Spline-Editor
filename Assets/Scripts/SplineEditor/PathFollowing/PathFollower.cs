@@ -30,14 +30,15 @@ namespace SplineEditor.PathFollowing
         {
             if (!IsEnabled)
                 return;
-            CheckNormalizedPosition();
             if (PositionerMode == PositionerMode.Normalized)
             {
+                CheckNormalizedPosition();
                 NormalizedPosition = Mathf.Clamp01(NormalizedPosition + Speed * _incrementMode * Time.deltaTime);
                 UpdatePositionWithNormalizedValue();
             }
             else if (PositionerMode == PositionerMode.Distance)
             {
+                CheckDistance();
                 Distance = Mathf.Clamp(Distance + Speed * _incrementMode * Time.deltaTime, 0f, Spline.TotalLength);
                 UpdatePositionWithDistance();
             }
@@ -77,7 +78,14 @@ namespace SplineEditor.PathFollowing
             if (MovementMode == MovementMode.PingPong)
                 return -1;
             if (MovementMode == MovementMode.Default) IsEnabled = false;
-            else if (MovementMode == MovementMode.ForwardLoop) NormalizedPosition = 0f;
+            else if (MovementMode == MovementMode.ForwardLoop)
+            {
+                // ReSharper disable once ConvertIfStatementToSwitchStatement
+                if (PositionerMode == PositionerMode.Distance)
+                    Distance = 0f;
+                else if (PositionerMode == PositionerMode.Normalized) 
+                    NormalizedPosition = 0f;
+            }
             return 1;
         }
 
@@ -94,6 +102,14 @@ namespace SplineEditor.PathFollowing
                 1f => SetIncrementModeAtTheEnd(),
                 _ => _incrementMode
             };
+        }
+
+        private void CheckDistance()
+        {
+            if (Distance == 0f)
+                _incrementMode = SetIncrementModeAtTheStart();
+            else if (Distance >= Spline.TotalLength)
+                _incrementMode = SetIncrementModeAtTheEnd();
         }
 
 #endregion

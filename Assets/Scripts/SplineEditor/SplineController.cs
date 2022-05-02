@@ -111,34 +111,6 @@ namespace SplineEditor
 
 #region PUBLIC_METHODS
 
-        [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f)]
-        public void AddPoint()
-        {
-            CreateNewPoint();
-        }
-        
-        [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f), TabGroup("Init")]
-        public void InitializeSpline()
-        {
-            if (Spline == null)
-            {
-                Spline = GetComponent<CatmullRom>();
-                CreateInitialPoints();
-                Spline.InitializeCatmullRom(ControlPoints.ToArray(), Resolution, IsClosedLoop);
-            }
-        }
-
-        [Button(ButtonSizes.Large), GUIColor(.8f, .2f, .2f), TabGroup("Init")]
-        public void RemoveSpline()
-        {
-#if UNITY_EDITOR
-            Spline = null;
-            foreach (var point in ControlPoints) 
-                DestroyImmediate(point.gameObject);
-            ControlPoints = new List<Transform>();
-#endif
-        }
-
         public void RemovePoint(Transform point, bool destroyEnabled)
         {
 #if UNITY_EDITOR
@@ -153,22 +125,50 @@ namespace SplineEditor
                 return;
             DestroyImmediate(point.gameObject);
 #endif
-
         }
-
+#endregion
+        
+#region PRIVATE_METHODS
+        private void InitializeEventHandler()
+        {
+            
+        }
+        
         [Button(ButtonSizes.Large), ShowIf("UpdateMethod", UpdateMethod.WithMethod)]
-        public void UpdateSpline()
+        private void UpdateSpline()
         {
             if (Spline == null)
                 return;
             Spline.UpdateControlPoints(ControlPoints.ToArray());
             Spline.UpdateResolution(Resolution, IsClosedLoop);
         }
+        [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f)]
+        private void AddPoint()
+        {
+            CreateNewPoint();
+        }
+        
+        [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f), TabGroup("Init")]
+        private void InitializeSpline()
+        {
+            if (Spline == null)
+            {
+                Spline = GetComponent<CatmullRom>();
+                CreateInitialPoints();
+                Spline.InitializeCatmullRom(ControlPoints.ToArray(), Resolution, IsClosedLoop);
+            }
+        }
 
-#endregion
-
-
-#region PRIVATE_METHODS
+        [Button(ButtonSizes.Large), GUIColor(.8f, .2f, .2f), TabGroup("Init")]
+        private void RemoveSpline()
+        {
+#if UNITY_EDITOR
+            Spline = null;
+            foreach (var point in ControlPoints) 
+                DestroyImmediate(point.gameObject);
+            ControlPoints = new List<Transform>();
+#endif
+        }
         private void UpdateSplineDrawingConfig()
         {
             Spline.ActivateDrawSpline(DrawSpline);

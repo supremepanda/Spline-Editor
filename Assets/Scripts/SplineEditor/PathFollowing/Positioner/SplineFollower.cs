@@ -6,15 +6,19 @@ namespace SplineEditor.PathFollowing.Positioner
     public class SplineFollower : PositionerBase
     {
 //-------Public Variables-------//
+        public const short INCREMENT_FORWARD = 1;
+        public const short INCREMENT_BACKWARD = -1;
+        public short IncrementMode => _incrementMode;
+        public Collider GetEventTriggerCollider => EventTriggerCollider;
         public bool IsEnabled = false;
         public float Speed;
 
 //------Serialized Fields-------//
         [SerializeField] private MovementMode MovementMode;
-
+        [SerializeField, Required] private Collider EventTriggerCollider;
 
 //------Private Variables-------//
-
+        private short _incrementMode = INCREMENT_FORWARD;
 //------Debug------//
         [SerializeField, ReadOnly, TabGroup("Debug")] private float EstimatedFinishTime;
 
@@ -49,13 +53,13 @@ namespace SplineEditor.PathFollowing.Positioner
             if (PositionerMode == PositionerMode.Normalized)
             {
                 CheckNormalizedPosition();
-                NormalizedPosition = Mathf.Clamp01(NormalizedPosition + Speed * IncrementMode * Time.deltaTime);
+                NormalizedPosition = Mathf.Clamp01(NormalizedPosition + Speed * _incrementMode * Time.deltaTime);
                 UpdatePositionWithNormalizedValue();
             }
             else if (PositionerMode == PositionerMode.Distance)
             {
                 CheckDistance();
-                Distance = Mathf.Clamp(Distance + Speed * IncrementMode * Time.deltaTime, 0f, Spline.TotalLength);
+                Distance = Mathf.Clamp(Distance + Speed * _incrementMode * Time.deltaTime, 0f, Spline.TotalLength);
                 UpdatePositionWithDistance();
             }
         }
@@ -64,7 +68,7 @@ namespace SplineEditor.PathFollowing.Positioner
         {
             // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (MovementMode == MovementMode.PingPong)
-                return -1;
+                return INCREMENT_BACKWARD;
             if (MovementMode == MovementMode.Default) IsEnabled = false;
             else if (MovementMode == MovementMode.ForwardLoop)
             {
@@ -74,30 +78,30 @@ namespace SplineEditor.PathFollowing.Positioner
                 else if (PositionerMode == PositionerMode.Normalized) 
                     NormalizedPosition = 0f;
             }
-            return 1;
+            return INCREMENT_FORWARD;
         }
 
         private static short SetIncrementModeAtTheStart()
         {
-            return 1;
+            return INCREMENT_FORWARD;
         }
 
         private void CheckNormalizedPosition()
         {
-            IncrementMode = NormalizedPosition switch
+            _incrementMode = NormalizedPosition switch
             {
                 0f => SetIncrementModeAtTheStart(),
                 1f => SetIncrementModeAtTheEnd(),
-                _ => IncrementMode
+                _ => _incrementMode
             };
         }
 
         private void CheckDistance()
         {
             if (Distance == 0f)
-                IncrementMode = SetIncrementModeAtTheStart();
+                _incrementMode = SetIncrementModeAtTheStart();
             else if (Distance >= Spline.TotalLength)
-                IncrementMode = SetIncrementModeAtTheEnd();
+                _incrementMode = SetIncrementModeAtTheEnd();
         }
 #endregion
 

@@ -1,8 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Extensions.Other;
 using Sirenix.OdinInspector;
+using SplineEditor.Events;
+using SplineEditor.PathFollowing.Positioner;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,11 +14,14 @@ namespace SplineEditor
     public class SplineController : MonoBehaviour
     {
 //-------Public Variables-------//
+        public List<SplineFollower> Followers = new List<SplineFollower>();
         public CatmullRom GetSpline => Spline;
-        
+        public List<Transform> GetEventPoints => EventPoints; 
 //------Serialized Fields-------//
         [SerializeField, Required] private CatmullRom Spline;
         [SerializeField, ReadOnly] private List<Transform> ControlPoints;
+        [SerializeField, ReadOnly] private List<Transform> EventPoints;
+        [SerializeField, HideInInspector] private Transform EventHandler;
         
         [SerializeField, TabGroup("Config")] private UpdateMethod UpdateMethod;
         [SerializeField, Range(2, 25), TabGroup("Config"), OnValueChanged(nameof(UpdateSpline))] private int Resolution;
@@ -58,9 +62,11 @@ namespace SplineEditor
         private float SphereRadius = .22f;
         
         [SerializeField, TabGroup("References")] private GameObject PointPrefab;
+        [SerializeField, TabGroup("References")] private GameObject EventPrefab;
 //------Private Variables-------//
         private const float DISTANCE_BETWEEN_TWO_POINTS = 2f;
         private const string POINT_NAME_PREFIX = "Point_";
+        private const string EVENT_NAME_PREFIX = "Event_";
 #region UNITY_METHODS
 
         private void OnEnable()
@@ -126,14 +132,25 @@ namespace SplineEditor
             DestroyImmediate(point.gameObject);
 #endif
         }
+
+        public void RemoveEvent(Transform eventPoint, bool destroyEnabled)
+        {
+#if UNITY_EDITOR
+            if (eventPoint == null)
+                return;
+            if (Spline == null)
+                return;
+            EventPoints.Remove(eventPoint);
+            UpdateEventNames();
+            if (!destroyEnabled)
+                return;
+            DestroyImmediate(eventPoint.gameObject);
+#endif
+        }
 #endregion
         
 #region PRIVATE_METHODS
-        private void InitializeEventHandler()
-        {
-            
-        }
-        
+
         [Button(ButtonSizes.Large), ShowIf("UpdateMethod", UpdateMethod.WithMethod)]
         private void UpdateSpline()
         {
@@ -147,8 +164,15 @@ namespace SplineEditor
         {
             CreateNewPoint();
         }
+
+        [Button(ButtonSizes.Large), GUIColor(.9f, .7f, .2f)]
+        private void AddEvent()
+        {
+            CreateEventPoint();
+        }
         
-        [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f), TabGroup("Init")]
+        [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f), PropertyOrder(-1)
+        ,HideIf(nameof(Spline))]
         private void InitializeSpline()
         {
             if (Spline == null)
@@ -159,15 +183,41 @@ namespace SplineEditor
             }
         }
 
-        [Button(ButtonSizes.Large), GUIColor(.8f, .2f, .2f), TabGroup("Init")]
+        [Button(ButtonSizes.Large), GUIColor(.8f, .2f, .2f), TabGroup("Remove")]
         private void RemoveSpline()
         {
 #if UNITY_EDITOR
             Spline = null;
-            foreach (var point in ControlPoints) 
+            foreach (var point in ControlPoints)
+            {
+                if(point == null)
+                    continue;
                 DestroyImmediate(point.gameObject);
+            }
             ControlPoints = new List<Transform>();
 #endif
+        }
+
+        [Button(ButtonSizes.Large), GUIColor(.8f, .2f, .2f), TabGroup("Remove")]
+        private void RemoveEvents()
+        {
+#if UNITY_EDITOR
+            var eventPoints = EventPoints;
+            for (var ind = 0; ind < eventPoints.Count; ind++) 
+                RemoveEvent(eventPoints[ind], true);
+            EventPoints = new List<Transform>();
+            if (EventHandler == null)
+                return;
+            DestroyImmediate(EventHandler.gameObject);
+            EventHandler = null;
+#endif
+        }
+        private void InitializeEvents()
+        {
+            var eventTransform = new GameObject();
+            eventTransform.name = "Events";
+            eventTransform.transform.SetParent(transform);
+            EventHandler = eventTransform.transform;
         }
         private void UpdateSplineDrawingConfig()
         {
@@ -237,6 +287,21 @@ namespace SplineEditor
 #endif
         }
 
+        private void CreateEventPoint()
+        {
+#if UNITY_EDITOR
+            if(EventHandler == null)
+                InitializeEvents();
+            var eventPoint = PrefabUtility.InstantiatePrefab(EventPrefab, EventHandler) as GameObject;
+            eventPoint.name = $"{EVENT_NAME_PREFIX}{EventPoints.Count}";
+            eventPoint.TryGetComponent(out SplineEvent splineEvent);
+            EventPoints.Add(eventPoint.transform);
+            if (splineEvent == null)
+                return;
+            splineEvent.SetSpline(Spline);
+#endif
+        }
+
         private GameObject CreatePoint()
         {
 #if UNITY_EDITOR
@@ -247,12 +312,20 @@ namespace SplineEditor
             return null;
 #endif
         }
-
+        
         private void UpdatePointNames()
         {
             for (var ind = 0; ind < ControlPoints.Count; ind++)
             {
                 ControlPoints[ind].gameObject.name = $"{POINT_NAME_PREFIX}{ind}";
+            }
+        }
+
+        private void UpdateEventNames()
+        {
+            for (var ind = 0; ind < EventPoints.Count; ind++)
+            {
+                EventPoints[ind].gameObject.name = $"{EVENT_NAME_PREFIX}{ind}";
             }
         }
 #endregion

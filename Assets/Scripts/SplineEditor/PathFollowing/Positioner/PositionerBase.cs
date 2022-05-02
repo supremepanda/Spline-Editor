@@ -17,7 +17,6 @@ namespace SplineEditor.PathFollowing.Positioner
         [SerializeField, OnValueChanged(nameof(UpdateOnPositionerModeChanged))] 
         protected PositionerMode PositionerMode;
 //------Private Variables-------//
-        protected short IncrementMode = 1;
 
 #region UNITY_METHODS
 
@@ -26,6 +25,10 @@ namespace SplineEditor.PathFollowing.Positioner
 
 #region PUBLIC_METHODS
 
+        public void SetSpline(CatmullRom spline)
+        {
+            Spline = spline;
+        }
 #endregion
 
 

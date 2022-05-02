@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SplineEditor
+namespace SplineEditor.Controller
 {
     public class CatmullRomCalculations : MonoBehaviour
     {

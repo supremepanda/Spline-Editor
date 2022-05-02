@@ -7,7 +7,7 @@ using SplineEditor.PathFollowing.Positioner;
 using UnityEditor;
 using UnityEngine;
 
-namespace SplineEditor
+namespace SplineEditor.Controller
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(CatmullRom))]
@@ -28,37 +28,37 @@ namespace SplineEditor
         [SerializeField, TabGroup("Config"), OnValueChanged(nameof(UpdateSpline))] private bool IsClosedLoop;
         [SerializeField, TabGroup("Config")] private Direction PointDirection = Direction.XZ;
         
-        [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), OnValueChanged(nameof(UpdateNormalDrawingConfig))]
         private bool DrawNormals;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)), Range(0, 20), OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)), Range(0, 20), OnValueChanged(nameof(UpdateNormalDrawingConfig))]
         private float NormalExtrusion = 2f;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)), OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)), OnValueChanged(nameof(UpdateNormalDrawingConfig))]
         private Color NormalColor = Color.red;
         [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)),
-         OnValueChangedAttribute(nameof(UpdateNormalDrawingConfig))]
+         OnValueChanged(nameof(UpdateNormalDrawingConfig))]
         private float NormalThickness = 1.2f;
 
-        [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateTangentDrawingConfig))] 
+        [SerializeField, TabGroup("Draw"), OnValueChanged(nameof(UpdateTangentDrawingConfig))] 
         private bool DrawTangent;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)), Range(0, 20), OnValueChangedAttribute(nameof(UpdateTangentDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)), Range(0, 20), OnValueChanged(nameof(UpdateTangentDrawingConfig))]
         private float TangentExtrusion = 2f;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)), OnValueChangedAttribute(nameof(UpdateTangentDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)), OnValueChanged(nameof(UpdateTangentDrawingConfig))]
         private Color TangentColor = Color.cyan;
         [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawTangent)),
-         OnValueChangedAttribute(nameof(UpdateTangentDrawingConfig))]
+         OnValueChanged(nameof(UpdateTangentDrawingConfig))]
         private float TangentThickness = 1.2f;
         
-        [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateSplineDrawingConfig))] private bool DrawSpline = true;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSpline)), OnValueChangedAttribute(nameof(UpdateSplineDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), OnValueChanged(nameof(UpdateSplineDrawingConfig))] private bool DrawSpline = true;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSpline)), OnValueChanged(nameof(UpdateSplineDrawingConfig))]
         private Color SplineColor = Color.white;
         [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSpline)),
-         OnValueChangedAttribute(nameof(UpdateSplineDrawingConfig))]
+         OnValueChanged(nameof(UpdateSplineDrawingConfig))]
         private float SplineThickness = 2.5f;
 
-        [SerializeField, TabGroup("Draw"), OnValueChangedAttribute(nameof(UpdateSphereDrawingConfig))] private bool DrawSphere = true;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSphere)), OnValueChangedAttribute(nameof(UpdateSphereDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), OnValueChanged(nameof(UpdateSphereDrawingConfig))] private bool DrawSphere = true;
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSphere)), OnValueChanged(nameof(UpdateSphereDrawingConfig))]
         private Color SphereColor = Color.magenta;
-        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSphere)), OnValueChangedAttribute(nameof(UpdateSphereDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawSphere)), OnValueChanged(nameof(UpdateSphereDrawingConfig))]
         private float SphereRadius = .22f;
         
         [SerializeField, TabGroup("References")] private GameObject PointPrefab;
@@ -177,7 +177,7 @@ namespace SplineEditor
         {
             if (Spline == null)
             {
-                Spline = GetComponent<CatmullRom>();
+                Spline = GetComponent<Controller.CatmullRom>();
                 CreateInitialPoints();
                 Spline.InitializeCatmullRom(ControlPoints.ToArray(), Resolution, IsClosedLoop);
             }
@@ -253,7 +253,7 @@ namespace SplineEditor
         {
 #if UNITY_EDITOR
             ControlPoints = new List<Transform>();
-            for (var ind = 0; ind < CatmullRom.MIN_POINTS_LENGTH; ind++)
+            for (var ind = 0; ind < Controller.CatmullRom.MIN_POINTS_LENGTH; ind++)
             {
                 var point = CreatePoint();
                 var target = ind * DISTANCE_BETWEEN_TWO_POINTS;

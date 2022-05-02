@@ -1,10 +1,7 @@
-using System;
-using System.Linq;
 using Extensions.Other;
-using UnityEditor;
 using UnityEngine;
 
-namespace SplineEditor
+namespace SplineEditor.Controller
 {
     public partial class CatmullRom : MonoBehaviour
     {

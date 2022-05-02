@@ -1,4 +1,4 @@
-namespace SplineEditor
+namespace SplineEditor.Controller
 {
     public enum Direction
     {

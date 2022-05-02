@@ -13,7 +13,7 @@ namespace SplineEditor.PathFollowing.Positioner
          ShowIf(nameof(PositionerMode), PositionerMode.Distance)]
         public float Distance;
 //------Serialized Fields-------//
-        [SerializeField, Required, PropertyOrder(-1)] protected CatmullRom Spline;
+        [SerializeField, Required, PropertyOrder(-1)] protected Controller.CatmullRom Spline;
         [SerializeField, OnValueChanged(nameof(UpdateOnPositionerModeChanged))] 
         protected PositionerMode PositionerMode;
 //------Private Variables-------//
@@ -25,7 +25,7 @@ namespace SplineEditor.PathFollowing.Positioner
 
 #region PUBLIC_METHODS
 
-        public void SetSpline(CatmullRom spline)
+        public void SetSpline(Controller.CatmullRom spline)
         {
             Spline = spline;
         }

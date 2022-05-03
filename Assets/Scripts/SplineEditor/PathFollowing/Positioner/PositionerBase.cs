@@ -16,6 +16,8 @@ namespace SplineEditor.PathFollowing.Positioner
         [SerializeField, Required, PropertyOrder(-1)] protected Controller.CatmullRom Spline;
         [SerializeField, OnValueChanged(nameof(UpdateOnPositionerModeChanged))] 
         protected PositionerMode PositionerMode;
+        [SerializeField, OnValueChanged(nameof(UpdateXPosition))]
+        protected float XPosition = 0f;
 //------Private Variables-------//
 
 #region UNITY_METHODS
@@ -47,7 +49,8 @@ namespace SplineEditor.PathFollowing.Positioner
         
         protected void UpdatePositionWithNormalizedValue()
         {
-            var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition);
+            var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition,
+                XPosition);
             transform.position = targetPos;
             transform.rotation = Quaternion.LookRotation(tangent);
         }
@@ -56,11 +59,18 @@ namespace SplineEditor.PathFollowing.Positioner
 #region Distance Functions
         protected void UpdatePositionWithDistance()
         {
-            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance);
+            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, XPosition);
             transform.position = targetPos;
             transform.rotation = Quaternion.LookRotation(tangent);
         }
-        #endregion
+#endregion
+
+        private void UpdateXPosition()
+        {
+            if (PositionerMode == PositionerMode.Distance)
+                UpdatePositionWithDistance();
+            else if (PositionerMode == PositionerMode.Normalized) UpdatePositionWithNormalizedValue();
+        }
 #endregion
 
     }

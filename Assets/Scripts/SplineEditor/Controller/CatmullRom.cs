@@ -35,7 +35,7 @@ namespace SplineEditor.Controller
             return new CatmullRomPoint(position, tangent, normal, 0f, 0f);
         }
 
-        public (Vector3, Vector3) GetPositionAndTangentFromDistance(float distance)
+        public (Vector3, Vector3) GetPositionAndTangentFromDistance(float distance, float xPos)
         {
             if(_totalLength <= 0f)
                 CalculateTotalLength();
@@ -52,14 +52,14 @@ namespace SplineEditor.Controller
                 }
                 if (distance == _splinePoints[ind].DistanceToStart)
                 {
-                    return (_splinePoints[ind].Position, _splinePoints[ind].Tangent);
+                    return (_splinePoints[ind].Position + _splinePoints[ind].Normal * -xPos, _splinePoints[ind].Tangent);
                 }
             }
             var t = Mathf.InverseLerp(point1.DistanceToStart, point2.DistanceToStart, distance);
-            return CalculateTargetPosAndTangent(point1, point2, t);
+            return CalculateTargetPosAndTangent(point1, point2, t, xPos);
         }
         
-        public (Vector3, Vector3) GetPositionAndTangentFromNormalizedValue(float value)
+        public (Vector3, Vector3) GetPositionAndTangentFromNormalizedValue(float value, float xPos)
         {
             var point1 = new CatmullRomPoint();
             var point2 = new CatmullRomPoint();
@@ -73,11 +73,11 @@ namespace SplineEditor.Controller
                 }
                 if (value == _splinePoints[ind].NormalizedValue)
                 {
-                    return (_splinePoints[ind].Position, _splinePoints[ind].Tangent);
+                    return (_splinePoints[ind].Position + _splinePoints[ind].Normal * -xPos, _splinePoints[ind].Tangent);
                 }
             }
             var t = Mathf.InverseLerp(point1.NormalizedValue, point2.NormalizedValue, value);
-            return CalculateTargetPosAndTangent(point1, point2, t);
+            return CalculateTargetPosAndTangent(point1, point2, t, xPos);
         }
         
         public void InitializeCatmullRom(Transform[] controlPoints, int resolution, bool closedLoop)
@@ -134,12 +134,13 @@ namespace SplineEditor.Controller
 
 
 #region PRIVATE_METHODS
-
-        private (Vector3, Vector3) CalculateTargetPosAndTangent(CatmullRomPoint point1, CatmullRomPoint point2, float t)
+        private (Vector3, Vector3) CalculateTargetPosAndTangent(CatmullRomPoint point1, CatmullRomPoint point2, float t,
+            float xPos)
         {
             var targetPos = Vector3.Lerp(point1.Position, point2.Position, t);
+            var targetPosX = Vector3.Lerp(point1.Normal, point2.Normal, t) * -xPos;
             var tangent = Vector3.Lerp(point1.Tangent, point2.Tangent, t);
-            return (targetPos, tangent);
+            return (targetPos + targetPosX, tangent);
         }
         
         private static bool IsGivenResolutionValid(int resolution)

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace SplineEditor.PathFollowing.Positioner
 {
     public class SplinePositioner : PositionerBase

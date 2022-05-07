@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 563579977888690562}
   - component: {fileID: 563579977888690563}
   - component: {fileID: 3905935026483898422}
-  - component: {fileID: 2778159634893287255}
-  - component: {fileID: 8678462476443871805}
   m_Layer: 0
   m_Name: Event
   m_TagString: Untagged
@@ -51,6 +49,7 @@ MonoBehaviour:
   Distance: 0
   Spline: {fileID: 0}
   PositionerMode: 0
+  ActiveFollowers: []
   Events:
     m_PersistentCalls:
       m_Calls: []
@@ -67,32 +66,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45d069d86f9a4cd9ab9acd4d3517a059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!54 &2778159634893287255
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 563579977888690565}
-  serializedVersion: 2
-  m_Mass: 0.0000001
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
---- !u!65 &8678462476443871805
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 563579977888690565}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

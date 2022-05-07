@@ -3,7 +3,6 @@ using System.Linq;
 using Extensions.Other;
 using Sirenix.OdinInspector;
 using SplineEditor.Events;
-using SplineEditor.PathFollowing.Positioner;
 using UnityEditor;
 using UnityEngine;
 

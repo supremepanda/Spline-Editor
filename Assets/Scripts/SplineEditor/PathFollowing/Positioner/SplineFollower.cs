@@ -1,4 +1,7 @@
+using System;
 using Sirenix.OdinInspector;
+using SplineEditor.Controller;
+using SplineEditor.Events;
 using SplineEditor.PathFollowing.Positioner.Base;
 using UnityEngine;
 
@@ -7,21 +10,18 @@ namespace SplineEditor.PathFollowing.Positioner
     public class SplineFollower : PositionerBaseWithXPos
     {
 //-------Public Variables-------//
+        public static Action<SplineFollower, float, short> OnPositionChanged;
+
         public const short INCREMENT_FORWARD = 1;
         public const short INCREMENT_BACKWARD = -1;
-        public short IncrementMode => _incrementMode;
-        public Collider GetEventTriggerCollider => EventTriggerCollider;
         public bool IsEnabled = false;
         public float Speed;
 
 //------Serialized Fields-------//
         [SerializeField] private MovementMode MovementMode;
-        [SerializeField, Required] private Collider EventTriggerCollider;
-
 //------Private Variables-------//
         private short _incrementMode = INCREMENT_FORWARD;
 //------Debug------//
-        [SerializeField, ReadOnly, TabGroup("Debug")] private float EstimatedFinishTime;
 
 #region UNITY_METHODS
         private void Update()
@@ -40,14 +40,29 @@ namespace SplineEditor.PathFollowing.Positioner
 
 
 #region PRIVATE_METHODS
-        
-        [Button(ButtonSizes.Large), TabGroup("Debug")]
-        private void CalculateEstimatedFinishTime()
+
+        protected override void UpdatePositionWithDistance()
         {
-            if(PositionerMode == PositionerMode.Distance)
-                EstimatedFinishTime = Spline.TotalLength / Speed;
-            else if (PositionerMode == PositionerMode.Normalized)
-                EstimatedFinishTime = 1f / Speed;
+            base.UpdatePositionWithDistance();
+            OnPositionChanged?.Invoke(this, GetNormalizedPosition(), _incrementMode);
+        }
+
+        protected override void UpdatePositionWithNormalizedValue()
+        {
+            base.UpdatePositionWithNormalizedValue();
+            OnPositionChanged?.Invoke(this, GetNormalizedPosition(), _incrementMode);
+        }
+
+        [Button(ButtonSizes.Large), TabGroup("Debug")]
+        private float CalculateEstimatedFinishTime()
+        {
+            var estimatedFinishTime = PositionerMode switch
+            {
+                PositionerMode.Distance => Spline.TotalLength / Speed,
+                PositionerMode.Normalized => 1f / Speed,
+                _ => 0f
+            };
+            return estimatedFinishTime;
         }
         private void CheckActionsForPositionerMode()
         {
@@ -82,7 +97,7 @@ namespace SplineEditor.PathFollowing.Positioner
             return INCREMENT_FORWARD;
         }
 
-        private static short SetIncrementModeAtTheStart()
+        private short SetIncrementModeAtTheStart()
         {
             return INCREMENT_FORWARD;
         }
@@ -95,6 +110,7 @@ namespace SplineEditor.PathFollowing.Positioner
                 1f => SetIncrementModeAtTheEnd(),
                 _ => _incrementMode
             };
+            CheckRaisableEvents();
         }
 
         private void CheckDistance()
@@ -103,7 +119,58 @@ namespace SplineEditor.PathFollowing.Positioner
                 _incrementMode = SetIncrementModeAtTheStart();
             else if (Distance >= Spline.TotalLength)
                 _incrementMode = SetIncrementModeAtTheEnd();
+            CheckRaisableEvents();
         }
+
+        private void CheckRaisableEvents()
+        {
+            Spline.TryGetComponent(out SplineController controller);
+            if (controller == null)
+                return;
+            foreach (var eventPoint in controller.GetEventPoints)
+            {
+                eventPoint.TryGetComponent(out SplineEvent splineEvent);
+                if(splineEvent == null)
+                    continue;
+                if (!IsEventAccessible(splineEvent))
+                    splineEvent.ActiveFollowers.Remove(this);
+                else if (!splineEvent.ActiveFollowers.Contains(this))
+                    splineEvent.ActiveFollowers.Add(this);
+            }
+        }
+
+        private bool IsEventAccessible(SplineEvent splineEvent)
+        {
+            return CheckEventForDirection(splineEvent) && CheckEventForPosition(splineEvent);
+        }
+
+        private bool CheckEventForDirection(SplineEvent splineEvent)
+        {
+            switch (splineEvent.GetEventTriggerMode)
+            {
+                case EventTriggerMode.OnlyForward when _incrementMode != INCREMENT_FORWARD:
+                case EventTriggerMode.OnlyBackward when _incrementMode != INCREMENT_BACKWARD:
+                    return false;
+                case EventTriggerMode.TwoSided:
+                default:
+                    return true;
+            }
+        }
+
+        private bool CheckEventForPosition(SplineEvent splineEvent)
+        {
+            var eventNormalizedValue = splineEvent.GetNormalizedPosition();
+            var followerNormalizedValue = GetNormalizedPosition();
+            switch (_incrementMode)
+            {
+                case INCREMENT_FORWARD when eventNormalizedValue < followerNormalizedValue:
+                case INCREMENT_BACKWARD when eventNormalizedValue > followerNormalizedValue:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+        
 #endregion
 
     }

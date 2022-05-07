@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using SplineEditor.PathFollowing.Positioner;
-using SplineEditor.PathFollowing.Positioner.Base;
 using SplineEditor.PathFollowing.Positioner.Base.Base;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,8 +10,8 @@ namespace SplineEditor.Events
     public class SplineEvent : PositionerBase
     {
 //-------Public Variables-------//
-
-
+        public EventTriggerMode GetEventTriggerMode => EventTriggerMode;
+        [ReadOnly] public List<SplineFollower> ActiveFollowers;
 //------Serialized Fields-------//
         [SerializeField, PropertyOrder(999)] private UnityEvent<SplineFollower> Events;
         [SerializeField] private EventTriggerMode EventTriggerMode;
@@ -19,26 +19,26 @@ namespace SplineEditor.Events
 
 #region UNITY_METHODS
 
+        private void Awake()
+        {
+            SplineFollower.OnPositionChanged += CheckEventToRaise;
+        }
+
+        private void OnDestroy()
+        {
+            SplineFollower.OnPositionChanged -= CheckEventToRaise;
+        }
+
 #endregion
 
 
 #region PUBLIC_METHODS
-
-        private void OnTriggerEnter(Collider other)
-        {
-            other.TryGetComponent(out SplineFollower follower);
-            if (follower == null)
-                return;
-            if (other != follower.GetEventTriggerCollider)
-                return;
-            Raise(follower);
-        }
-
+        
         [Button]
-        public void Raise(SplineFollower follower)
+        public void Raise(SplineFollower follower, bool debugMode)
         {
-            if (!CheckEventTriggerMode(follower))
-                return;
+            if (!debugMode) 
+                ActiveFollowers.Remove(follower);
             Events?.Invoke(follower);
         }
 #endregion
@@ -46,16 +46,26 @@ namespace SplineEditor.Events
 
 #region PRIVATE_METHODS
 
-        private bool CheckEventTriggerMode(SplineFollower follower)
+        private void CheckEventToRaise(SplineFollower follower, float normalizedValue, short incrementMode)
         {
-            var currentIncrementMode = follower.IncrementMode;
-            return EventTriggerMode switch
+            if (!ActiveFollowers.Contains(follower))
+                return;
+            var eventNormalizedPosition = GetNormalizedPosition();
+            switch (incrementMode)
             {
-                EventTriggerMode.OnlyForward => currentIncrementMode == SplineFollower.INCREMENT_FORWARD,
-                EventTriggerMode.OnlyBackward => currentIncrementMode == SplineFollower.INCREMENT_BACKWARD,
-                EventTriggerMode.TwoSided => true,
-                _ => true
-            };
+                case SplineFollower.INCREMENT_FORWARD:
+                {
+                    if(eventNormalizedPosition <= normalizedValue)
+                        Raise(follower, false);
+                    break;
+                }
+                case SplineFollower.INCREMENT_BACKWARD:
+                {
+                    if(eventNormalizedPosition >= normalizedValue)
+                        Raise(follower, false);
+                    break;
+                }
+            }
         }
 #endregion
 

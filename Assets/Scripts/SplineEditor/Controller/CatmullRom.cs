@@ -80,6 +80,11 @@ namespace SplineEditor.Controller
             return CalculateTargetPosAndTangent(point1, point2, t, xPos);
         }
         
+        public float CalculateNormalizedValueUsingDistance(float distance)
+        {
+            return Mathf.Clamp01(distance / _totalLength);
+        }
+        
         public void InitializeCatmullRom(Transform[] controlPoints, int resolution, bool closedLoop)
         {
             if(!IsGivenPointsLengthValid(controlPoints.Length) || !IsGivenResolutionValid(resolution))

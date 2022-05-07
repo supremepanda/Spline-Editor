@@ -1,4 +1,6 @@
+using System;
 using Sirenix.OdinInspector;
+using SplineEditor.Controller;
 using UnityEngine;
 
 namespace SplineEditor.PathFollowing.Positioner.Base.Base
@@ -6,6 +8,7 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
     public abstract class PositionerBase : MonoBehaviour
     {
 //-------Public Variables-------//
+        public PositionerMode GetPositionerMode => PositionerMode;
         [Range(0f, 1f), OnValueChanged(nameof(UpdatePositionWithNormalizedValue)),
          ShowIf(nameof(PositionerMode), PositionerMode.Normalized)]
         public float NormalizedPosition;
@@ -13,10 +16,9 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
          ShowIf(nameof(PositionerMode), PositionerMode.Distance)]
         public float Distance;
 //------Serialized Fields-------//
-        [SerializeField, Required, PropertyOrder(-1)] protected Controller.CatmullRom Spline;
+        [SerializeField, Required, PropertyOrder(-1)] protected CatmullRom Spline;
         [SerializeField, OnValueChanged(nameof(UpdateOnPositionerModeChanged))] 
         protected PositionerMode PositionerMode;
-        
 //------Private Variables-------//
 
 #region UNITY_METHODS
@@ -26,7 +28,17 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
 
 #region PUBLIC_METHODS
 
-        public void SetSpline(Controller.CatmullRom spline)
+        public float GetNormalizedPosition()
+        {
+            return PositionerMode switch
+            {
+                PositionerMode.Normalized => NormalizedPosition,
+                PositionerMode.Distance => Spline.CalculateNormalizedValueUsingDistance(Distance),
+                _ => 0f
+            };
+        }
+        
+        public void SetSpline(CatmullRom spline)
         {
             Spline = spline;
         }

@@ -14,7 +14,6 @@ namespace SplineEditor.Controller
     public class SplineController : MonoBehaviour
     {
 //-------Public Variables-------//
-        public List<SplineFollower> Followers = new List<SplineFollower>();
         public CatmullRom GetSpline => Spline;
         public List<Transform> GetEventPoints => EventPoints; 
 //------Serialized Fields-------//

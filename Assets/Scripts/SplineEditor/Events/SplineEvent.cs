@@ -1,5 +1,7 @@
 using Sirenix.OdinInspector;
 using SplineEditor.PathFollowing.Positioner;
+using SplineEditor.PathFollowing.Positioner.Base;
+using SplineEditor.PathFollowing.Positioner.Base.Base;
 using UnityEngine;
 using UnityEngine.Events;
 

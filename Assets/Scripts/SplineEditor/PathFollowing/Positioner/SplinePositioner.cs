@@ -1,6 +1,8 @@
+using SplineEditor.PathFollowing.Positioner.Base;
+
 namespace SplineEditor.PathFollowing.Positioner
 {
-    public class SplinePositioner : PositionerBase
+    public class SplinePositioner : PositionerBaseWithXPos
     {
 //-------Public Variables-------//
 

@@ -575,7 +575,7 @@ MonoBehaviour:
   Distance: 14.63
   Spline: {fileID: 1664851705}
   PositionerMode: 1
-  XPosition: 1.8
+  XPosition: 0
 --- !u!135 &563120898
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -868,7 +868,7 @@ PrefabInstance:
     - target: {fileID: 563579977888690562, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.4328594
+      value: -7.5507693
       objectReference: {fileID: 0}
     - target: {fileID: 563579977888690562, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
@@ -878,12 +878,12 @@ PrefabInstance:
     - target: {fileID: 563579977888690562, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.210187
+      value: 4.1209908
       objectReference: {fileID: 0}
     - target: {fileID: 563579977888690562, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9889294
+      value: 0.9966711
       objectReference: {fileID: 0}
     - target: {fileID: 563579977888690562, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
@@ -893,7 +893,7 @@ PrefabInstance:
     - target: {fileID: 563579977888690562, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.1483868
+      value: -0.08152787
       objectReference: {fileID: 0}
     - target: {fileID: 563579977888690562, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
@@ -928,7 +928,7 @@ PrefabInstance:
     - target: {fileID: 563579977888690563, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
       propertyPath: NormalizedPosition
-      value: 0.474
+      value: 0.424
       objectReference: {fileID: 0}
     - target: {fileID: 563579977888690563, guid: 7c985b25a16c44125849d26081f8ddb3,
         type: 3}
@@ -1110,7 +1110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86591238136742c890a884ebb1c45627, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Followers: []
   Spline: {fileID: 1664851705}
   ControlPoints:
   - {fileID: 856135919}
@@ -1351,7 +1350,7 @@ PrefabInstance:
     - target: {fileID: 2607277460590985238, guid: 324a1962828de4a69ad83f8bb995b6c2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.29587412
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2607277460590985238, guid: 324a1962828de4a69ad83f8bb995b6c2,
         type: 3}
@@ -1361,7 +1360,7 @@ PrefabInstance:
     - target: {fileID: 2607277460590985238, guid: 324a1962828de4a69ad83f8bb995b6c2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.0074514
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2607277460590985238, guid: 324a1962828de4a69ad83f8bb995b6c2,
         type: 3}
@@ -1406,7 +1405,7 @@ PrefabInstance:
     - target: {fileID: 2607277460590985239, guid: 324a1962828de4a69ad83f8bb995b6c2,
         type: 3}
       propertyPath: XPosition
-      value: -2.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2607277460590985239, guid: 324a1962828de4a69ad83f8bb995b6c2,
         type: 3}

@@ -1,9 +1,10 @@
 using Sirenix.OdinInspector;
+using SplineEditor.PathFollowing.Positioner.Base;
 using UnityEngine;
 
 namespace SplineEditor.PathFollowing.Positioner
 {
-    public class SplineFollower : PositionerBase
+    public class SplineFollower : PositionerBaseWithXPos
     {
 //-------Public Variables-------//
         public const short INCREMENT_FORWARD = 1;

@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace SplineEditor.PathFollowing.Positioner
+namespace SplineEditor.PathFollowing.Positioner.Base.Base
 {
     public abstract class PositionerBase : MonoBehaviour
     {
@@ -16,8 +16,7 @@ namespace SplineEditor.PathFollowing.Positioner
         [SerializeField, Required, PropertyOrder(-1)] protected Controller.CatmullRom Spline;
         [SerializeField, OnValueChanged(nameof(UpdateOnPositionerModeChanged))] 
         protected PositionerMode PositionerMode;
-        [SerializeField, OnValueChanged(nameof(UpdateXPosition))]
-        protected float XPosition = 0f;
+        
 //------Private Variables-------//
 
 #region UNITY_METHODS
@@ -47,30 +46,25 @@ namespace SplineEditor.PathFollowing.Positioner
                 UpdatePositionWithNormalizedValue();
         }
         
-        protected void UpdatePositionWithNormalizedValue()
+        protected virtual void UpdatePositionWithNormalizedValue()
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition,
-                XPosition);
+                0f);
             transform.position = targetPos;
             transform.rotation = Quaternion.LookRotation(tangent);
         }
 #endregion
         
 #region Distance Functions
-        protected void UpdatePositionWithDistance()
+        protected virtual void UpdatePositionWithDistance()
         {
-            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, XPosition);
+            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, 0f);
             transform.position = targetPos;
             transform.rotation = Quaternion.LookRotation(tangent);
         }
 #endregion
 
-        private void UpdateXPosition()
-        {
-            if (PositionerMode == PositionerMode.Distance)
-                UpdatePositionWithDistance();
-            else if (PositionerMode == PositionerMode.Normalized) UpdatePositionWithNormalizedValue();
-        }
+        
 #endregion
 
     }

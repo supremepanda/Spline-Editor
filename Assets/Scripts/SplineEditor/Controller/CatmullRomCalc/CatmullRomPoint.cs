@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SplineEditor.Controller
+namespace SplineEditor.Controller.CatmullRomCalc
 {
     public struct CatmullRomPoint
     {

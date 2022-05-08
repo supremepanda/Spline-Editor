@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SplineEditor.Controller
+namespace SplineEditor.Controller.CatmullRomCalc
 {
     public partial class CatmullRom
     {

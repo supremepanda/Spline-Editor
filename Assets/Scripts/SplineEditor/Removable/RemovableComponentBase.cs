@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using SplineEditor.Controller;
+using SplineEditor.Controller.SplineController;
 using UnityEngine;
 
 namespace SplineEditor.Removable

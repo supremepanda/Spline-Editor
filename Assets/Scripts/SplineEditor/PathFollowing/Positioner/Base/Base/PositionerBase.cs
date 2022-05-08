@@ -1,6 +1,8 @@
 using System;
 using Sirenix.OdinInspector;
 using SplineEditor.Controller;
+using SplineEditor.Controller.CatmullRomCalc;
+using SplineEditor.PathFollowing.Positioner.Modes;
 using UnityEngine;
 
 namespace SplineEditor.PathFollowing.Positioner.Base.Base

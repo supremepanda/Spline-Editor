@@ -34,15 +34,32 @@ namespace SplineEditor.PathFollowing.Positioner.Base
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition,
                 XPosition);
-            transform.position = targetPos;
-            transform.rotation = Quaternion.LookRotation(tangent);
+            if (IsMover)
+            {
+                transform.position = targetPos;
+                transform.rotation = Quaternion.LookRotation(tangent);
+            }
+            else
+            {
+                MoverTransform.position = targetPos;
+                MoverTransform.rotation = Quaternion.LookRotation(tangent);
+            }
         }
 
         protected override void UpdatePositionWithDistance()
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, XPosition);
-            transform.position = targetPos;
-            transform.rotation = Quaternion.LookRotation(tangent);
+            if (IsMover)
+            {
+                transform.position = targetPos;
+                transform.rotation = Quaternion.LookRotation(tangent);
+            }
+            else
+            {
+                MoverTransform.position = targetPos;
+                MoverTransform.rotation = Quaternion.LookRotation(tangent);
+            }
+            
         }
 
         private void UpdateXPosition()

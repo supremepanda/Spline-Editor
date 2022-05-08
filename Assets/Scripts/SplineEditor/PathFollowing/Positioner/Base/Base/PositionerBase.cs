@@ -21,6 +21,9 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
         [SerializeField, Required, PropertyOrder(-1)] protected CatmullRom Spline;
         [SerializeField, OnValueChanged(nameof(UpdateOnPositionerModeChanged))] 
         protected PositionerMode PositionerMode;
+        [SerializeField] protected bool IsMover = true;
+        [SerializeField, HideIf(nameof(IsMover))]
+        protected Transform MoverTransform;
 //------Private Variables-------//
 
 #region UNITY_METHODS
@@ -64,8 +67,16 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition,
                 0f);
-            transform.position = targetPos;
-            transform.rotation = Quaternion.LookRotation(tangent);
+            if (IsMover)
+            {
+                transform.position = targetPos;
+                transform.rotation = Quaternion.LookRotation(tangent);
+            }
+            else
+            {
+                MoverTransform.position = targetPos;
+                MoverTransform.rotation = Quaternion.LookRotation(tangent);
+            }
         }
 #endregion
         
@@ -73,8 +84,16 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
         protected virtual void UpdatePositionWithDistance()
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, 0f);
-            transform.position = targetPos;
-            transform.rotation = Quaternion.LookRotation(tangent);
+            if (IsMover)
+            {
+                transform.position = targetPos;
+                transform.rotation = Quaternion.LookRotation(tangent);
+            }
+            else
+            {
+                MoverTransform.position = targetPos;
+                transform.rotation = Quaternion.LookRotation(tangent);
+            }
         }
 #endregion
 

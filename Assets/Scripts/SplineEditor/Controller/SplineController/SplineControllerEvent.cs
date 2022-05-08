@@ -12,12 +12,12 @@ namespace SplineEditor.Controller.SplineController
 
 
 //------Serialized Fields-------//
-        [SerializeField, TabGroup("References")] private GameObject EventPrefab;
         [SerializeField, ReadOnly, TabGroup("Debug")] private List<Transform> EventPoints;
         [SerializeField, HideInInspector] private Transform EventHandler;
 
 //------Private Variables-------//
         private const string EVENT_NAME_PREFIX = "Event_";
+        private GameObject _eventPrefab;
 
 
 #region UNITY_METHODS
@@ -66,7 +66,9 @@ namespace SplineEditor.Controller.SplineController
 #if UNITY_EDITOR
             if(EventHandler == null)
                 InitializeEvents();
-            var eventPoint = PrefabUtility.InstantiatePrefab(EventPrefab, EventHandler) as GameObject;
+            if (_eventPrefab == null)
+                _eventPrefab = Resources.Load<GameObject>("Spline/Event");
+            var eventPoint = PrefabUtility.InstantiatePrefab(_eventPrefab, EventHandler) as GameObject;
             eventPoint.name = $"{EVENT_NAME_PREFIX}{EventPoints.Count}";
             eventPoint.TryGetComponent(out SplineEvent splineEvent);
             EventPoints.Add(eventPoint.transform);

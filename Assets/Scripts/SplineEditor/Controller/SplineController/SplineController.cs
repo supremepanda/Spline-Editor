@@ -17,18 +17,17 @@ namespace SplineEditor.Controller.SplineController
         public CatmullRom GetSpline => Spline;
         public List<Transform> GetEventPoints => EventPoints; 
 //------Serialized Fields-------//
-        [SerializeField, Required] private CatmullRom Spline;
-        [SerializeField, ReadOnly] private List<Transform> ControlPoints;
+        [SerializeField, Required, PropertyOrder(-99)] private CatmullRom Spline;
+        [SerializeField, ReadOnly, TabGroup("Debug"), PropertyOrder(1)] private List<Transform> ControlPoints;
 
-        [SerializeField, TabGroup("Config")] private UpdateMethod UpdateMethod;
+        [SerializeField, TabGroup("Config"), PropertyOrder(-1)] private UpdateMethod UpdateMethod;
         [SerializeField, Range(2, 25), TabGroup("Config"), OnValueChanged(nameof(UpdateSpline))] private int Resolution;
         [SerializeField, TabGroup("Config"), OnValueChanged(nameof(UpdateSpline))] private bool IsClosedLoop;
         [SerializeField, TabGroup("Config")] private Direction PointDirection = Direction.XZ;
-
-        [SerializeField, TabGroup("References")] private GameObject PointPrefab;
 //------Private Variables-------//
         private const float DISTANCE_BETWEEN_TWO_POINTS = 2f;
         private const string POINT_NAME_PREFIX = "Point_";
+        private GameObject _pointPrefab;
 #region UNITY_METHODS
 
         private void OnEnable()
@@ -195,7 +194,8 @@ namespace SplineEditor.Controller.SplineController
         private GameObject CreatePoint()
         {
 #if UNITY_EDITOR
-            var point = PrefabUtility.InstantiatePrefab(PointPrefab, transform) as GameObject;
+            if (_pointPrefab == null) _pointPrefab = Resources.Load<GameObject>("Spline/Point");
+            var point = PrefabUtility.InstantiatePrefab(_pointPrefab, transform) as GameObject;
             point.name = $"{POINT_NAME_PREFIX}{ControlPoints.Count}";
             return point; 
 #else

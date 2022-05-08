@@ -9,7 +9,7 @@ namespace SplineEditor.Controller.SplineController
 
 
 //------Serialized Fields-------//
-        [SerializeField, TabGroup("Draw"), OnValueChanged(nameof(UpdateNormalDrawingConfig))]
+        [SerializeField, TabGroup("Draw"), PropertyOrder(0), OnValueChanged(nameof(UpdateNormalDrawingConfig))]
         private bool DrawNormals;
         [SerializeField, TabGroup("Draw"), ShowIf(nameof(DrawNormals)), Range(0, 20), OnValueChanged(nameof(UpdateNormalDrawingConfig))]
         private float NormalExtrusion = 2f;

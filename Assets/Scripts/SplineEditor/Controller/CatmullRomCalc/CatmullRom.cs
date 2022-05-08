@@ -144,8 +144,8 @@ namespace SplineEditor.Controller.CatmullRomCalc
         {
             var targetPos = Vector3.Lerp(point1.Position, point2.Position, t);
             var targetPosX = Vector3.Lerp(point1.Normal, point2.Normal, t) * -xPos;
-            var tangent = Vector3.Lerp(point1.Tangent, point2.Tangent, t) * -xPos;
-            return (targetPos + targetPosX, tangent);
+            var tangent = Vector3.Lerp(point1.Tangent, point2.Tangent, t);
+            return (targetPos + targetPosX, tangent + tangent * -xPos);
         }
         
         private static bool IsGivenResolutionValid(int resolution)

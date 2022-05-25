@@ -85,4 +85,5 @@ Thumbs.db
 *.DS_Store
 ProjectSettings/GvhProjectSettings.xml
 Assembly-CSharp.csproj.DotSettings
-
+/Assets/Plugins/Sirenix
+/Assets/Plugins/Sirenix.meta

@@ -26,6 +26,8 @@ In general, my spline editor has a necessary spline feautures. It has spline con
 ### Spline Controller
 Spline controller is a controller of the spline. It comes with Catmull Rom component. You can add points, add events, configure spline and remove it using this component.
 
+#### Config Page
+
 <p align="center">
 <img src="screenshots/spline_controller_config.png" height=400px>
 </p>
@@ -34,5 +36,36 @@ Spline controller is a controller of the spline. It comes with Catmull Rom compo
 - **Resolution**: Smoothness configuration of spline. When it is high, there are more points than lower version between two main spline points.
 - **Closed Loop**: Connect last spline point to first spline point.
 - **Point Direction**: Add point direction helper. (When XZ is selected, new point will be spawn to added Z axis point.)
+
+#### Draw Page
+
+<p align="center">
+<img src="screenshots/draw.png" height=400px>
+</p>
+
+- **Draw Checkboxes**: Activate or deactivate drawing.
+- **Spline Sphere**: Spline points.
+- **Tangent**: Direction of spline.
+- **Normal**: Local X axis of spline.
+- **Extrusion**: Frequency of drawing.
+- **Thickness**: Thickness of drawing.
+
+#### Debug Page
+
+<p align="center">
+<img src="screenshots/spline_controller_debug.png" height=400px>
+</p>
+
+- **Event Points**: List of event points on spline.
+- **Spline Points**: List of spline points.
+
+#### Remove Page
+
+<p align="center">
+<img src="screenshots/spline_controller_remove.png" height=400px>
+</p>
+
+- **Remove Spline**: Remove function to remove all spline points.
+- **Remove Events**: Remove event points on spline.
 
 IN PROCESS...

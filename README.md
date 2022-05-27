@@ -20,3 +20,10 @@ Unity Editor Version (It may not work in lower versions.)
 Odin Inspector (You should add your Odin Inspector to project because of licence issues)
     
 ## Features
+In general, my spline editor has a necessary spline feautures. It has spline controller, clickable points (also spline points and event points exist in hierarchy), spline follower, spline positioner and spline event.
+<img src="screenshots/general_overview.png" weight=60%>
+
+### Spline Controller
+<img src="screenshots/spline_controller_config.png" height=20%>
+
+IN PROCESS...

@@ -5,6 +5,14 @@
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Features](#features)
+    - [Spline Controller](#spline-controller)
+        - [Config Page](#config-page)
+        - [Draw Page](#draw-page)
+        - [Debug Page](#debug-page)
+        - [Remove Page](#remove-page)
+    - [Spline Positioner](#spline-positioner)
+    - [Spline Follower](#spline-follower)
+    - [Spline Event](#spline-event)
 
 ## To Do
 - [ ] Mesh generation using Spline
@@ -21,7 +29,7 @@ Odin Inspector (You should add your Odin Inspector to project because of licence
     
 ## Features
 In general, my spline editor has a necessary spline feautures. It has spline controller, clickable points (also spline points and event points exist in hierarchy), spline follower, spline positioner and spline event.
-<img src="screenshots/general_overview.png" weight=60%>
+<img src="screenshots/general_overview.png" height=400px>
 
 ### Spline Controller
 Spline controller is a controller of the spline. It comes with Catmull Rom component. You can add points, add events, configure spline and remove it using this component.
@@ -96,5 +104,17 @@ It inherited from Spline Positioner, same configurations exist with it. Extras:
     - **Ping Pong**: It goes beginning to end and reverse the movement.
 - **Calculate Estimated Finish Time**: Calculate estimated finish time using current speed of follower. It can make level designers happy :D
 
+### Spline Event
 
-IN PROCESS...
+<p align="center">
+<img src="screenshots/spline_event.png" height=400px>
+</p>
+
+It inherited from SplinePositioner, same configurations exist with it. Extras:
+- **Active Followers**: Shows active follower according to current event trigger mode.
+- **Event Trigger Mode**: It is a rule to when event should be raised while the spline follower passing on it.
+    - **Only Forward**: Events can be raised when the follower direction is start to end.
+    - **Only Backward**: Events can be raised when the follower direction is end to start.
+    - **Two Sided**: Events can be raised every time when the follower passed on it.
+- **Raise**: You can raise event without waiting follower. 
+- **Unity Event**: It is a unity event with SplineFollower parameter. If you want to check who is raised event, you should use dynamic parameter functions.

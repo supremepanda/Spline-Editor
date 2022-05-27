@@ -24,6 +24,15 @@ In general, my spline editor has a necessary spline feautures. It has spline con
 <img src="screenshots/general_overview.png" weight=60%>
 
 ### Spline Controller
-<img src="screenshots/spline_controller_config.png" height=20%>
+Spline controller is a controller of the spline. It comes with Catmull Rom component. You can add points, add events, configure spline and remove it using this component.
+
+<p align="center">
+<img src="screenshots/spline_controller_config.png" height=400px>
+</p>
+
+- **Update Method**: Update spline points on update or with a method to call when you want to update spline.
+- **Resolution**: Smoothness configuration of spline. When it is high, there are more points than lower version between two main spline points.
+- **Closed Loop**: Connect last spline point to first spline point.
+- **Point Direction**: Add point direction helper. (When XZ is selected, new point will be spawn to added Z axis point.)
 
 IN PROCESS...

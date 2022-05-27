@@ -68,4 +68,33 @@ Spline controller is a controller of the spline. It comes with Catmull Rom compo
 - **Remove Spline**: Remove function to remove all spline points.
 - **Remove Events**: Remove event points on spline.
 
+### Spline Positioner
+
+<p align="center">
+<img src="screenshots/spline_positioner.png" height=400px>
+</p>
+
+- **Positioner Mode**: It has two option to calculate points on spline.
+    - **Normalized**: Calculates position from 0 to 1.
+    - **Distance**: Calculates position in meters.
+
+- **IsMover**: If you want to affect different gameobject, remove checkbox and add your transform of gameobject.
+- **XPosition**: Change local x position on spline. 
+
+### Spline Follower
+
+<p align="center">
+<img src="screenshots/spline_follower.png" height=400px>
+</p>
+
+It inherited from Spline Positioner, same configurations exist with it. Extras:
+- **Is Enabled**: Activate or deactivate movement.
+- **Speed**: Speed of the movement. Be careful with the positioner mode, speed works according to what did you choose.
+- **Movement Mode**: These are movement modes.
+    - **Default**: It goes beginning to end and stops.
+    - **Forward Loop**: It goes beginning to end and again same loop. It works well with closed loop spline.
+    - **Ping Pong**: It goes beginning to end and reverse the movement.
+- **Calculate Estimated Finish Time**: Calculate estimated finish time using current speed of follower. It can make level designers happy :D
+
+
 IN PROCESS...

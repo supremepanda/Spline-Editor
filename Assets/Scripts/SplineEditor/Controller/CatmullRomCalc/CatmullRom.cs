@@ -152,7 +152,6 @@ namespace SplineEditor.Controller.CatmullRomCalc
         {
             if (resolution >= MIN_RESOLUTION) 
                 return true;
-            EditorDebug.LogError($"too few resolution (min: {MIN_RESOLUTION})");
             return false;
         }
 

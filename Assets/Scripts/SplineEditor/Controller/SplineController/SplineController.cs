@@ -38,10 +38,7 @@ namespace SplineEditor.Controller.SplineController
                 return;
             UpdateSpline();
 #if UNITY_EDITOR
-            UpdateSplineDrawingConfig();
-            UpdateNormalDrawingConfig();
-            UpdateTangentDrawingConfig();
-            UpdateSphereDrawingConfig();
+            UpdateDrawings();
 #endif
         }
 
@@ -57,10 +54,7 @@ namespace SplineEditor.Controller.SplineController
         private void Start()
         {
 #if UNITY_EDITOR
-            UpdateSplineDrawingConfig();
-            UpdateNormalDrawingConfig();
-            UpdateTangentDrawingConfig();
-            UpdateSphereDrawingConfig();
+            UpdateDrawings();
 #endif
         }
 
@@ -136,6 +130,7 @@ namespace SplineEditor.Controller.SplineController
                 Spline = GetComponent<CatmullRom>();
                 CreateInitialPoints();
                 Spline.InitializeCatmullRom(ControlPoints.ToArray(), Resolution, IsClosedLoop);
+                UpdateDrawings();
             }
         }
 
@@ -209,6 +204,14 @@ namespace SplineEditor.Controller.SplineController
             {
                 ControlPoints[ind].gameObject.name = $"{POINT_NAME_PREFIX}{ind}";
             }
+        }
+
+        private void UpdateDrawings()
+        {
+            UpdateSplineDrawingConfig();
+            UpdateNormalDrawingConfig();
+            UpdateTangentDrawingConfig();
+            UpdateSphereDrawingConfig();
         }
 #endregion
 

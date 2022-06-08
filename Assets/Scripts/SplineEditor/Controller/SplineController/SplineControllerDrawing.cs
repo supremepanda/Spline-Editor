@@ -58,6 +58,8 @@ namespace SplineEditor.Controller.SplineController
 #region PRIVATE_METHODS
         private void UpdateSplineDrawingConfig()
         {
+            if (Spline == null)
+                return;
             Spline.ActivateDrawSpline(DrawSpline);
             Spline.SetSplineColor(SplineColor);
             Spline.SetSplineThickness(SplineThickness);
@@ -65,6 +67,8 @@ namespace SplineEditor.Controller.SplineController
 
         private void UpdateNormalDrawingConfig()
         {
+            if (Spline == null)
+                return;
             Spline.ActivateDrawNormal(DrawNormals);
             Spline.SetNormalColor(NormalColor);
             Spline.SetNormalExtrusion(NormalExtrusion);
@@ -73,6 +77,8 @@ namespace SplineEditor.Controller.SplineController
 
         private void UpdateTangentDrawingConfig()
         {
+            if (Spline == null)
+                return;
             Spline.ActivateDrawTangent(DrawTangent);
             Spline.SetTangentColor(TangentColor);
             Spline.SetTangentExtrusion(TangentExtrusion);
@@ -81,6 +87,8 @@ namespace SplineEditor.Controller.SplineController
 
         private void UpdateSphereDrawingConfig()
         {
+            if (Spline == null)
+                return;
             Spline.ActivateDrawSphere(DrawSphere);
             Spline.SetSphereRadius(SphereRadius);
             Spline.SetSphereColor(SphereColor);

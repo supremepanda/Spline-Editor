@@ -28,7 +28,6 @@ namespace SplineEditor.Controller
                                + (t * t * t - 2.0f * t * t + t) * tanPoint1
                                + (-2.0f * t * t * t + 3.0f * t * t) * end
                                + (t * t * t - t * t) * tanPoint2;
-
             return position;
         }
 

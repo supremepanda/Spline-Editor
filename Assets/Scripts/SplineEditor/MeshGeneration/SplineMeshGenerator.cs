@@ -10,6 +10,7 @@ namespace SplineEditor.MeshGeneration
     {
         [SerializeField, Required] private CatmullRom _spline;
         [SerializeField, Required] private Material _material;
+        [SerializeField] private Vector2 _materialTiling = Vector2.one;
         [SerializeField] private Vector3 _meshRotation;
         [SerializeField] private float _width = 1f;
         [SerializeField, Required] private MeshRenderer _meshRenderer;
@@ -45,8 +46,8 @@ namespace SplineEditor.MeshGeneration
 
                 _vertices[i * 2] = v1;
                 _vertices[i * 2 + 1] = v2;
-                _uv[i * 2] = new Vector2(0, i);
-                _uv[i * 2 + 1] = new Vector2(1, i);
+                _uv[i * 2] = new Vector2(0, _materialTiling.y * i);
+                _uv[i * 2 + 1] = new Vector2(_materialTiling.x * 1, _materialTiling.y * i);
 
                 if (i < _spline.SplinePoints.Length - 1)
                 {

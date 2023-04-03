@@ -4,6 +4,7 @@ using Extensions.Other;
 using Sirenix.OdinInspector;
 using SplineEditor.Controller.CatmullRomCalc;
 using SplineEditor.Controller.Enums;
+using SplineEditor.MeshGeneration;
 using UnityEditor;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ namespace SplineEditor.Controller.SplineController
         [SerializeField, Range(2, 25), TabGroup("Config"), OnValueChanged(nameof(UpdateSpline))] private int Resolution;
         [SerializeField, TabGroup("Config"), OnValueChanged(nameof(UpdateSpline))] private bool IsClosedLoop;
         [SerializeField, TabGroup("Config")] private Direction PointDirection = Direction.XZ;
+        [SerializeField] private SplineMeshGenerator _meshGenerator;
 //------Private Variables-------//
         private const float DISTANCE_BETWEEN_TWO_POINTS = 2f;
         private const string POINT_NAME_PREFIX = "Point_";
@@ -113,6 +115,9 @@ namespace SplineEditor.Controller.SplineController
                 return;
             Spline.UpdateControlPoints(ControlPoints.ToArray());
             Spline.UpdateResolution(Resolution, IsClosedLoop);
+            if (_meshGenerator == null)
+                return;
+            _meshGenerator.Generate();
         }
         [Button(ButtonSizes.Large), GUIColor(.2f, .8f, .2f)]
         private void AddPoint()

@@ -32,10 +32,11 @@ namespace SplineEditor.Controller.CatmullRomCalc
             var position = CatmullRomCalculations.CalculatePosition(start, end, tanPoint0, tanPoint1, t);
             var tangent = CatmullRomCalculations.CalculateTangent(start, end, tanPoint0, tanPoint1, t);            
             var normal = CatmullRomCalculations.NormalFromTangent(tangent);
-            return new CatmullRomPoint(position, tangent, normal, 0f, 0f);
+            var binormal = CatmullRomCalculations.BinormalFromTangentAndNormal(tangent, normal);
+            return new CatmullRomPoint(position, tangent, normal, binormal, 0f, 0f);
         }
 
-        public (Vector3, Vector3) GetPositionAndTangentFromDistance(float distance, float xPos)
+        public (Vector3, Vector3) GetPositionAndTangentFromDistance(float distance, float xPos, float yPos)
         {
             if(_totalLength <= 0f)
                 CalculateTotalLength();
@@ -56,10 +57,10 @@ namespace SplineEditor.Controller.CatmullRomCalc
                 }
             }
             var t = Mathf.InverseLerp(point1.DistanceToStart, point2.DistanceToStart, distance);
-            return CalculateTargetPosAndTangent(point1, point2, t, xPos);
+            return CalculateTargetPosAndTangent(point1, point2, t, xPos, yPos);
         }
         
-        public (Vector3, Vector3) GetPositionAndTangentFromNormalizedValue(float value, float xPos)
+        public (Vector3, Vector3) GetPositionAndTangentFromNormalizedValue(float value, float xPos, float yPos)
         {
             var point1 = new CatmullRomPoint();
             var point2 = new CatmullRomPoint();
@@ -77,7 +78,7 @@ namespace SplineEditor.Controller.CatmullRomCalc
                 }
             }
             var t = Mathf.InverseLerp(point1.NormalizedValue, point2.NormalizedValue, value);
-            return CalculateTargetPosAndTangent(point1, point2, t, xPos);
+            return CalculateTargetPosAndTangent(point1, point2, t, xPos, yPos);
         }
         
         public float CalculateNormalizedValueUsingDistance(float distance)
@@ -140,12 +141,13 @@ namespace SplineEditor.Controller.CatmullRomCalc
 
 #region PRIVATE_METHODS
         private (Vector3, Vector3) CalculateTargetPosAndTangent(CatmullRomPoint point1, CatmullRomPoint point2, float t,
-            float xPos)
+            float xPos, float yPos)
         {
             var targetPos = Vector3.Lerp(point1.Position, point2.Position, t);
             var targetPosX = Vector3.Lerp(point1.Normal, point2.Normal, t) * -xPos;
+            var targetPosY = Vector3.Lerp(point1.Binormal, point2.Binormal, t) * -yPos;
             var tangent = Vector3.Lerp(point1.Tangent, point2.Tangent, t);
-            return (targetPos + targetPosX, tangent + tangent * -xPos);
+            return (targetPos + targetPosX + targetPosY, tangent + tangent * -xPos);
         }
         
         private static bool IsGivenResolutionValid(int resolution)

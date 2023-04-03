@@ -24,6 +24,7 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
         [SerializeField] protected bool IsMover = true;
         [SerializeField, HideIf(nameof(IsMover))]
         protected Transform MoverTransform;
+        [SerializeField, OnValueChanged(nameof(UpdatePosition))] protected float _yPosition = 0f;
 //------Private Variables-------//
 
 #region UNITY_METHODS
@@ -66,7 +67,7 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
         protected virtual void UpdatePositionWithNormalizedValue()
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition,
-                0f);
+                0f, _yPosition);
             if (IsMover)
             {
                 transform.position = targetPos;
@@ -83,7 +84,7 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
 #region Distance Functions
         protected virtual void UpdatePositionWithDistance()
         {
-            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, 0f);
+            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, 0f, _yPosition);
             if (IsMover)
             {
                 transform.position = targetPos;
@@ -95,8 +96,15 @@ namespace SplineEditor.PathFollowing.Positioner.Base.Base
                 transform.rotation = Quaternion.LookRotation(tangent);
             }
         }
+        
 #endregion
 
+        protected void UpdatePosition()
+        {
+            if (PositionerMode == PositionerMode.Distance)
+                UpdatePositionWithDistance();
+            else if (PositionerMode == PositionerMode.Normalized) UpdatePositionWithNormalizedValue();
+        }
         
 #endregion
 

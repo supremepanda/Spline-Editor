@@ -45,6 +45,11 @@ namespace SplineEditor.Controller
         {
             return Vector3.Cross(tangent, Vector3.up).normalized / 2;
         }
+        
+        public static Vector3 BinormalFromTangentAndNormal(Vector3 tangent, Vector3 normal)
+        {
+            return Vector3.Cross(tangent, normal).normalized;
+        }
 #endregion
 
 

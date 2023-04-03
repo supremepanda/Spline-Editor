@@ -11,7 +11,7 @@ namespace SplineEditor.PathFollowing.Positioner.Base
 
 
 //------Serialized Fields-------//
-        [SerializeField, OnValueChanged(nameof(UpdateXPosition))]
+        [SerializeField, OnValueChanged(nameof(UpdatePosition))]
         protected float XPosition = 0f;
 
 //------Private Variables-------//
@@ -33,7 +33,7 @@ namespace SplineEditor.PathFollowing.Positioner.Base
         protected override void UpdatePositionWithNormalizedValue()
         {
             var (targetPos, tangent) = Spline.GetPositionAndTangentFromNormalizedValue(NormalizedPosition,
-                XPosition);
+                XPosition, _yPosition);
             if (IsMover)
             {
                 transform.position = targetPos;
@@ -48,7 +48,7 @@ namespace SplineEditor.PathFollowing.Positioner.Base
 
         protected override void UpdatePositionWithDistance()
         {
-            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, XPosition);
+            var (targetPos, tangent) = Spline.GetPositionAndTangentFromDistance(Distance, XPosition, _yPosition);
             if (IsMover)
             {
                 transform.position = targetPos;
@@ -62,12 +62,7 @@ namespace SplineEditor.PathFollowing.Positioner.Base
             
         }
 
-        private void UpdateXPosition()
-        {
-            if (PositionerMode == PositionerMode.Distance)
-                UpdatePositionWithDistance();
-            else if (PositionerMode == PositionerMode.Normalized) UpdatePositionWithNormalizedValue();
-        }
+        
 #endregion
 
     }
